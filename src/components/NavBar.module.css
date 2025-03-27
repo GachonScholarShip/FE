@@ -1,0 +1,60 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  height: 60px;
+  position: relative;
+}
+
+.dateTime {
+  color: #014f99;
+  font-size: 20px;
+}
+
+.time {
+  text-align: center;
+}
+
+.logo {
+  width: 260px;
+  height: 65px;
+}
+
+.homeIcon {
+  width: 50px;
+  height: 45px;
+}
+
+.line {
+  width: 1400px;
+  height: 1px;
+  background-color: #014f99;
+  margin: 30px auto;
+}
+
+/* 모바일 환경에서 적용할 스타일 */
+@media (max-width: 480px) {
+  .dateTime {
+    display: none;
+  }
+
+  .line {
+    display: none;
+  }
+
+  .logo {
+    width: 220px;
+    height: 50px;
+  }
+
+  .homeIcon {
+    /*!!!!!!!!!!!!!!!!!!!수정 필요함!!!!!!!!!!!!!!!!!!!!!!*/
+    width: 28px;
+    height: 26px;
+    position: absolute;
+    bottom: -520px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

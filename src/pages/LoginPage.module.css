@@ -1,0 +1,107 @@
+.bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-image: url("../assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.loginBox {
+  position: absolute;
+  top: 141px;
+  left: 950px;
+  width: 450px;
+  height: auto;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* 1280px 이하 화면 크기 */
+@media (max-width: 1280px) {
+  .loginBox {
+    top: 171px;
+    left: 740px;
+    width: 393px;
+    height: auto;
+  }
+}
+
+/* 768px 이하 화면 크기 */
+@media (max-width: 768px) {
+  .loginBox {
+    width: 350px;
+    height: 350px;
+    top: 251px;
+    left: 22px;
+  }
+}
+
+/* 작은 화면 크기 */
+@media (max-width: 480px) {
+  .loginBox {
+    width: 90%;
+    height: auto;
+    top: 200px;
+    left: 5%;
+  }
+}
+
+.title {
+  font-size: 32px;
+  text-align: center;
+  color: #014f99;
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 80%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.loginButton {
+  width: 80%;
+  padding: 12px;
+  background: #014f99;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.loginButton:hover {
+  background: #013a73;
+}
+
+.idpassword {
+  color: #014f99;
+  font-size: 16px;
+  width: 80%;
+  text-align: left;
+  font-weight: bold;
+}
+
+.signup {
+  margin-top: 30px;
+  color: #014f99;
+  text-decoration: none;
+  font-size: 14px;
+  width: 80%;
+  text-align: right;
+}
+
+.signup:hover {
+  text-decoration: underline;
+}

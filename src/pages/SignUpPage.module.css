@@ -1,0 +1,151 @@
+.bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-image: url("../assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.signupBox {
+  position: absolute;
+  top: 70px;
+  left: 950px;
+  width: 450px;
+  height: auto;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.inputGroup {
+  width: 80%;
+  display: flex;
+  align-items: center;
+}
+
+.checkButton {
+  width: 81px;
+  margin-left: 10px;
+  padding: 10px;
+  background: #014f99;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.checkButton:hover {
+  background: #013a73;
+}
+
+.genderGroup {
+  width: 80%;
+}
+
+.gender {
+  margin-right: 10px;
+}
+
+/* 1280px 이하 화면 크기 */
+@media (max-width: 1280px) {
+  .signupBox {
+    top: 80px;
+    left: 740px;
+    width: 393px;
+    height: auto;
+  }
+}
+
+/* 768px 이하 화면 크기 */
+@media (max-width: 768px) {
+  .signupBox {
+    width: 350px;
+    height: auto;
+    top: 251px;
+    left: 22px;
+  }
+}
+
+/*작은 화면 크기 */
+@media (max-width: 480px) {
+  .signupBox {
+    width: 90%;
+    height: auto;
+    top: 130px;
+    left: 5%;
+  }
+}
+
+.title {
+  font-size: 20px;
+  text-align: center;
+  color: #014f99;
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 80%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 2px solid #014f99;
+  font-size: 10px;
+}
+
+.input2 {
+  width: 80%;
+  padding: 12px;
+  margin: -3px 0 10px;
+  border: 2px solid #014f99;
+  font-size: 10px;
+}
+
+.signupButton {
+  width: 80%;
+  padding: 12px;
+  background: #014f99;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.signupButton:hover {
+  background: #013a73;
+}
+
+.idpassword {
+  font-weight: bold;
+  color: #014f99;
+  font-size: 12px;
+  width: 80%;
+  text-align: left;
+}
+
+.signup {
+  margin-top: 30px;
+  color: #014f99;
+  text-decoration: none;
+  font-size: 14px;
+  width: 80%;
+  text-align: right;
+}
+
+.signup:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: red; /* 중복된 경우 빨간색 */
+}
+
+.success {
+  color: green; /* 사용 가능한 경우 초록색 */
+}
