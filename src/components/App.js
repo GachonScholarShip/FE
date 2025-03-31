@@ -6,6 +6,10 @@ import RoadPage from "../pages/RoadPage";
 import FloorPage from "../pages/FloorPage";
 import LibraryPage from "../pages/LibraryPage";
 import ConversationPage from "../pages/ConversationPage";
+import ARViewPage from "../pages/ARViewPage";
+import MapViewPage from "../pages/MapViewPage";
+import CentralLibraryPage  from "../pages/CentralLibraryPage";
+import ElecLibraryPage  from "../pages/ElecLibraryPage";
 
 import styles from "./App.module.css";
 import "./App.font.css";
@@ -31,7 +35,7 @@ function App() {
         </Routes>
 
         <Routes>
-          <Route path="/floor" element={<FloorPage />} />
+          <Route path="/building/:building/:floor" element={<FloorPage />} />
         </Routes>
 
         <Routes>
@@ -41,6 +45,23 @@ function App() {
         <Routes>
           <Route path="/conversation" element={<ConversationPage />} />
         </Routes>
+
+        <Routes>
+          <Route path="/ar" element={<ARViewPage />} />
+        </Routes>
+
+        <Routes>
+          <Route path="/map" element={<MapViewPage />} />
+        </Routes>
+
+        <Routes>
+          <Route path="/library/centrallibrary" element={<CentralLibraryPage />} />
+        </Routes>
+
+        <Routes>
+          <Route path="/library/eleclibrary" element={<ElecLibraryPage />} />
+        </Routes>
+
       </div>
     </Router>
   );
