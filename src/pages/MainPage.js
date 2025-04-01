@@ -29,7 +29,7 @@ function MainPage() {
         </div>
         <div
           className={styles.button}
-          onClick={() => handleNavigation("/floor")}
+          onClick={() => handleNavigation("/building/비전타워/1")}
         >
           <img src={floorIcon} alt="Floor" className={styles.icon} />
           <span className={styles.buttonText}>층별 안내</span>
