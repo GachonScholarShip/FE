@@ -6,28 +6,6 @@ import RoadPage from "../pages/RoadPage";
 import FloorPage from "../pages/FloorPage";
 import LibraryPage from "../pages/LibraryPage";
 import ConversationPage from "../pages/ConversationPage";
-import ARViewPage from "../pages/ARViewPage";
-import MapViewPage from "../pages/MapViewPage";
-import CentralLibraryPage from "../pages/CentralLibraryPage";
-import ElecLibraryPage from "../pages/ElecLibraryPage";
-import UserAccountPage from "../pages/manager_pages/UserAccountPage";
-import UserAccountAddPage from "../pages/manager_pages/UserAccountAddPage";
-import UserAccountUpdatePage from "../pages/manager_pages/UserAccountUpdatePage";
-import BuildingManagementPage from "../pages/manager_pages/BuildingManagementPage";
-import BuildingManagementAddPage from "../pages/manager_pages/BuildingManagementAddPage";
-import BuildingManagementUpdatePage from "../pages/manager_pages/BuildingManagementUpdatePage";
-import ClassroomManagementPage from "../pages/manager_pages/ClassroomManagementPage";
-import ClassroomManagementAddPage from "../pages/manager_pages/ClassroomManagementAddPage";
-import ClassroomManagementUpdatePage from "../pages/manager_pages/ClassroomManagementUpdatePage";
-import MudangiManagementPage from "../pages/manager_pages/MudangiManagementPage";
-import MudangiManagementAddPage from "../pages/manager_pages/MudangiManagementAddPage";
-import MudangiManagementUpdatePage from "../pages/manager_pages/MudangiManagementUpdatePage";
-import RoadManagementPage from "../pages/manager_pages/RoadManagementPage";
-import RoadManagementAddPage from "../pages/manager_pages/RoadManagementAddPage";
-import RoadManagementUpdatePage from "../pages/manager_pages/RoadManagementUpdatePage";
-import RoadviewManagementPage from "../pages/manager_pages/RoadviewManagementPage";
-import RoadviewManagementAddPage from "../pages/manager_pages/RoadviewManagementAddPage";
-import RoadviewManagementUpdatePage from "../pages/manager_pages/RoadviewManagementUpdatePage";
 
 import styles from "./App.module.css";
 import "./App.font.css";
@@ -40,7 +18,13 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/road" element={<RoadPage />} />
-          <Route path="/building/:building/:floor" element={<FloorPage />} />
+        </Routes>
+
+        <Routes>
+          <Route path="/floor" element={<FloorPage />} />
+        </Routes>
+
+        <Routes>
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/conversation" element={<ConversationPage />} />
           <Route path="/ar" element={<ARViewPage />} />
@@ -87,6 +71,25 @@ function App() {
             path="/rvmu/:roadviewId"
             element={<RoadviewManagementUpdatePage />}
           />
+        </Routes>
+
+        <Routes>
+          <Route path="/ar" element={<ARViewPage />} />
+        </Routes>
+
+        <Routes>
+          <Route path="/map" element={<MapViewPage />} />
+        </Routes>
+
+        <Routes>
+          <Route
+            path="/library/centrallibrary"
+            element={<CentralLibraryPage />}
+          />
+        </Routes>
+
+        <Routes>
+          <Route path="/library/eleclibrary" element={<ElecLibraryPage />} />
         </Routes>
       </div>
     </Router>
