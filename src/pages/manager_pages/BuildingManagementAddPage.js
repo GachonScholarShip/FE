@@ -46,6 +46,16 @@ function BuildingManagementAddPage() {
                   </select>
                 </div>
               </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>최고층</label>
+                  <input type="text" placeholder="최고층을 입력해주세요" />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>최하층</label>
+                  <input type="text" placeholder="최하층을 입력해주세요" />
+                </div>
+              </div>
             </div>
 
             <div className={styles.savebuttonContainer}>
