@@ -1,0 +1,69 @@
+.navbar {
+  position: absolute;
+  width: 250px;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+  box-shadow: 2px 0 3px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.menuList {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  padding-left: 45px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font-size: 18px;
+  color: #b1b1b1;
+  text-decoration: none;
+}
+
+.active {
+  color: #014f99;
+}
+
+.navItem:hover {
+  color: #014f99;
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.navItemInner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.logoutButton {
+  width: 67px;
+  font-size: 18px;
+  color: #b1b1b1;
+  text-decoration: none;
+  align-self: flex-end;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.logoutButton:hover {
+  color: #014f99;
+  cursor: pointer;
+  transform: scale(1.05);
+}

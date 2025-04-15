@@ -8,14 +8,12 @@ const NavBar = () => {
   const formatDateTime = () => {
     const now = new Date();
 
-    // 시간 포맷 (AM/PM)
     const optionsTime = { hour: "numeric", minute: "numeric", hour12: true };
     const time = new Intl.DateTimeFormat("en-US", optionsTime)
       .format(now)
       .replace("AM", "AM")
       .replace("PM", "PM");
 
-    // 날짜 포맷 (연도, 월, 일, 요일)
     const optionsDate = {
       year: "numeric",
       month: "numeric",

@@ -14,10 +14,10 @@ body {
   margin: 0;
 }
 
-a,
-a:hover,
-a:active,
-a:visited {
+.layout a,
+.layout a:hover,
+.layout a:active,
+.layout a:visited {
   color: #494949;
   text-decoration: none;
 }

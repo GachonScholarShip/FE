@@ -69,6 +69,7 @@
   z-index: 3;
   transition: background-color 0.3s, transform 0.2s;
 }
+
 .button:hover {
   background-color: rgba(1, 79, 153, 0.6);
   cursor: pointer;
@@ -90,7 +91,7 @@
 }
 
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!수정 필요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11*/
-@media (max-width: 768px) {
+@media (max-width: 760px) {
   .button {
     width: 140px;
     height: 160px;
@@ -108,5 +109,11 @@
     font-size: 15px;
     text-align: center;
     color: #014f99;
+  }
+
+  .buttonContainer {
+    display: grid;
+    margin-top: 180px;
+    grid-template-columns: repeat(2, 1fr);
   }
 }

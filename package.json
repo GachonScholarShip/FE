@@ -10,7 +10,7 @@
     "react-router-dom": "^6.30.0",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.14.1",
-    "recharts": "^2.15.1"
+    "recharts": "^2.15.2"
   },
   "scripts": {
     "start": "react-scripts start",
