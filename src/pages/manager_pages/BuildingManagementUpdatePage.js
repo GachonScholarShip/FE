@@ -8,16 +8,21 @@ import { useState, useEffect } from "react";
 
 function BuildingManagementUpdatePage() {
   const location = useLocation();
-  const { name, available } = location.state || {};
+  const { name, available, topFloor, bottomFloor } = location.state || {};
 
   const [selectedName, setSelectedName] = useState("");
   const [selectedAvailability, setSelectedAvailability] = useState("");
+
+  const [selectedTopFloor, setSelectedTopFloor] = useState("");
+  const [selectedBottomFloor, setSelectedBottomFloor] = useState("");
 
   useEffect(() => {
     if (name) setSelectedName(name);
     if (available !== undefined)
       setSelectedAvailability(available ? "가능" : "불가능");
-  }, [name, available]);
+    if (topFloor) setSelectedTopFloor(topFloor);
+    if (bottomFloor) setSelectedBottomFloor(bottomFloor);
+  }, [name, available, topFloor, bottomFloor]);
 
   return (
     <div>
@@ -66,6 +71,26 @@ function BuildingManagementUpdatePage() {
                     <option value="가능">가능</option>
                     <option value="불가능">불가능</option>
                   </select>
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>최고층</label>
+                  <input
+                    type="text"
+                    placeholder="최고층을 입력해주세요"
+                    value={selectedTopFloor}
+                    onChange={(e) => setSelectedTopFloor(e.target.value)}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>최하층</label>
+                  <input
+                    type="text"
+                    placeholder="최하층을 입력해주세요"
+                    value={selectedBottomFloor}
+                    onChange={(e) => setSelectedBottomFloor(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
