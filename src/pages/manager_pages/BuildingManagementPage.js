@@ -15,8 +15,20 @@ function BuildingManagementPage() {
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [buildingData, setBuildingData] = useState([
-    { name: "가천관", available: true, baseId: 1 },
-    { name: "한의과대학", available: false, baseId: 2 },
+    {
+      name: "가천관",
+      available: true,
+      topFloor: "12F",
+      bottomFloor: "B2",
+      baseId: 1,
+    },
+    {
+      name: "한의과대학",
+      available: false,
+      topFloor: "5F",
+      bottomFloor: "1F",
+      baseId: 2,
+    },
   ]);
 
   const currentPage = "bm";
@@ -44,6 +56,8 @@ function BuildingManagementPage() {
       state: {
         name: building.name,
         available: building.available,
+        topFloor: building.topFloor,
+        bottomFloor: building.bottomFloor,
       },
     });
   };
@@ -90,6 +104,8 @@ function BuildingManagementPage() {
                           state: {
                             name: building.name,
                             available: building.available,
+                            topFloor: building.topFloor,
+                            bottomFloor: building.bottomFloor,
                           },
                         })
                       }
