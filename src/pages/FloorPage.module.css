@@ -59,9 +59,10 @@
 
 /* 층별 평면도 이미지 */
 .floorImage {
-  width: 65%;
-  margin-left: 50px;
-  margin-top: -40px;
+  width: 1070px;
+  height: 600px;
+  margin-left: 30px;
+  margin-top: -80px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 

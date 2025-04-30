@@ -26,7 +26,6 @@
 
 .content {
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
   z-index: 2;
   position: relative;
@@ -35,16 +34,16 @@
 }
 
 .map {
-  width: 80%;
-  max-width: 900px;
-  height: 650px;
+  display: block;
+  width: 900px;    /* 고정 크기 */
+  height: 650px;   /* 고정 크기 */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .buildingList {
-  width: 20%;
-  height: 680px;
+  width: 250px;    /* 고정 크기 */
+  height: 700px;
   margin-left: 20px;
   margin-top: -20px;
   background: rgba(1, 79, 153, 0.3);
@@ -54,7 +53,7 @@
 
 .buildingItem {
   list-style: none;
-  padding:1px;
+  padding: 1px;
   font-size: 18px;
   font-weight: bold;
   color: #014f99;
@@ -69,7 +68,8 @@
 }
 
 .modalContent {
-  background:  rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255);
+  border: 3px solid #005BAC;
   padding: 0px 10px 18px 15px;
   border-radius: 50px;
   width: 250px;
@@ -78,18 +78,20 @@
   text-align: center;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #014f99;
 }
 
 .modalContent::before {
   content: '';
   position: absolute;
-  top: 40%;
-  bottom: 100px;
-  left: -40px;
-  transform: rotate(-90deg);
-  border-width: 20px;
-  border-style: solid;
-  border-color: transparent transparent rgba(255, 255, 255, 0.8) transparent;
+  top: 50%;
+  left: -13.5px; /* 꼬리의 위치를 미세 조정 */
+  transform: translateY(-50%) rotate(315deg); /* 삼각형 회전 */
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255); /* 몸통과 동일한 반투명 배경 */
+  border-left: 3px solid #005BAC; /* 꼬리의 왼쪽 테두리 */
+  border-top: 3px solid #005BAC;
 }
 
 .modalButtons button {
@@ -100,11 +102,10 @@
   font-weight: bold;
   font-size: 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
   width: 90%;
   margin-bottom: 2px;
-  border-radius: 50px
 }
 
 .modalButtons button:hover {
