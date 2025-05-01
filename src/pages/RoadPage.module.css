@@ -31,18 +31,24 @@
   position: relative;
   margin-top: 60px;
   justify-content: center;
+  align-items: flex-start; 
+}
+
+.mapWrapper {
+  width: 60%;
+  aspect-ratio: 1200 / 860;
+  position: relative;
 }
 
 .map {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
-  width: 900px;    /* 고정 크기 */
-  height: 650px;   /* 고정 크기 */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .buildingList {
-  width: 250px;    /* 고정 크기 */
+  width: 270px;    /* 고정 크기 */
   height: 700px;
   margin-left: 20px;
   margin-top: -20px;
@@ -54,7 +60,7 @@
 .buildingItem {
   list-style: none;
   padding: 1px;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: bold;
   color: #014f99;
 }
