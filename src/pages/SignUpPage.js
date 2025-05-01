@@ -2,6 +2,7 @@ import styles from "./SignUpPage.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup";
+import axios from "axios";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -16,46 +17,105 @@ function SignUpPage() {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSignUp = () => {
-    // 모든 입력란이 채워졌는지 확인
-    if (!userId || !studentId || !password || !confirmPassword || !gender) {
-      setShowPopup(true);
-      return;
-    }
+  const handleSignUp = async () => {
+    console.log("회원가입 시도:", {
+      userId,
+      studentId,
+      password,
+      confirmPassword,
+      gender,
+      name,
+      email,
+    });
 
-    // 비밀번호가 일치하는지 확인
     if (password !== confirmPassword) {
       setPasswordMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    // 중복 체크
     if (idMessage.includes("중복된") || studentMessage.includes("중복된")) {
       setShowPopup(true);
       return;
     }
 
-    // 성공 메시지 설정 및 팝업 표시
-    setSuccessMessage("회원가입이 완료되었습니다!");
-    setShowPopup(true);
-  };
+    try {
+      const response = await axios.post(
+        "http://110.15.135.250:8000/user-service/signup",
+        {
+          username: name,
+          email: email,
+          password: password,
+          studentId: studentId,
+          sex: gender.toUpperCase(),
+          loginId: userId,
+        }
+      );
 
-  const checkId = () => {
-    //임의로 정해둠
-    if (userId === "1") {
-      setIdMessage("중복된 아이디입니다.");
-    } else {
-      setIdMessage("사용 가능한 아이디입니다.");
+      if (response.data.code === 200) {
+        setSuccessMessage("회원가입이 완료되었습니다!");
+        setShowPopup(true);
+      } else {
+        alert("회원가입에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("서버 응답:", error.response.data);
+
+      if (error.response.data.message.includes("이미 존재하는 ID")) {
+        setIdMessage("중복된 아이디입니다.");
+        setShowPopup(true);
+      } else if (error.response.data.message.includes("이미 존재하는 학번")) {
+        setStudentMessage("중복된 학번입니다.");
+        setShowPopup(true);
+      } else {
+        alert("회원가입 요청 중 에러가 발생했습니다.");
+      }
     }
   };
 
-  const checkStudentId = () => {
-    //임의로 정해둠
-    if (studentId === "1") {
-      setStudentMessage("중복된 학번입니다.");
-    } else {
-      setStudentMessage("사용 가능한 학번입니다.");
+  const checkId = async () => {
+    if (!userId) {
+      setIdMessage("아이디를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://110.15.135.250:8000/user-service/normal/login_id/${userId}`
+      );
+
+      if (response.data.data) {
+        setIdMessage("사용 가능한 아이디입니다.");
+      } else {
+        setIdMessage("중복된 아이디입니다.");
+      }
+    } catch (error) {
+      console.error("아이디 중복 확인 오류:", error);
+      setIdMessage("아이디 중복 확인 중 오류가 발생했습니다.");
+    }
+  };
+
+  const checkStudentId = async () => {
+    if (!studentId) {
+      setStudentMessage("학번을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://110.15.135.250:8000/user-service/normal/student_id/${studentId}`
+      );
+
+      if (response.data.data) {
+        setStudentMessage("사용 가능한 학번입니다.");
+      } else {
+        setStudentMessage("중복된 학번입니다.");
+      }
+    } catch (error) {
+      console.error("학번 중복 확인 오류:", error);
+      setStudentMessage("학번 중복 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -139,8 +199,13 @@ function SignUpPage() {
         )}
 
         <label className={styles.idpassword}>이름</label>
-        <input type="text" placeholder="이름 입력" className={styles.input} />
-
+        <input
+          type="text"
+          placeholder="이름 입력"
+          className={styles.input}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <label className={styles.idpassword}>학번</label>
         <div className={styles.inputGroup}>
           <input
@@ -161,7 +226,13 @@ function SignUpPage() {
         )}
 
         <label className={styles.idpassword}>이메일</label>
-        <input type="text" placeholder="이메일 입력" className={styles.input} />
+        <input
+          type="text"
+          placeholder="이메일 입력"
+          className={styles.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
         <label className={styles.idpassword}>성별</label>
         <div className={styles.genderGroup}>

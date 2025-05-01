@@ -5,7 +5,7 @@ import styles from "./MainPage.module.css";
 
 import roadIcon from "../assets/road.svg";
 import floorIcon from "../assets/floor.svg";
-import libraryIcon from "../assets/library.svg";
+import cafeteriaIcon from "../assets/cafeteria.svg";
 import conversationIcon from "../assets/conversation.svg";
 
 function MainPage() {
@@ -36,10 +36,10 @@ function MainPage() {
         </div>
         <div
           className={styles.button}
-          onClick={() => handleNavigation("/library")}
+          onClick={() => handleNavigation("/cafeteria")}
         >
-          <img src={libraryIcon} alt="Library" className={styles.icon} />
-          <span className={styles.buttonText}>도서관</span>
+          <img src={cafeteriaIcon} alt="Cafeteria" className={styles.icon} />
+          <span className={styles.buttonText}>학생식당</span>
         </div>
         <div
           className={styles.button}

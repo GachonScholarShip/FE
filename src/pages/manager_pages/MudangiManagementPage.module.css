@@ -82,3 +82,31 @@
 .addbutton {
   align-items: center;
 }
+
+.pagination {
+  position: absolute;
+  left: 460px;
+  top: 500px;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pageButton {
+  padding: 8px 12px;
+  margin: 0 4px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.activePage {
+  padding: 8px 12px;
+  margin: 0 4px;
+  border: none;
+  color: #ffffff;
+  background-color: #005bac;
+  cursor: pointer;
+  border-radius: 4px;
+}

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SaveButton from "../../components/SaveButton";
 import styles from "./MudangiManagementAddPage.module.css";
@@ -6,7 +8,15 @@ import styles from "./MudangiManagementAddPage.module.css";
 function MudangiManagementAddPage() {
   const [hour, setHour] = useState("09");
   const [minute, setMinute] = useState("00");
-  const [period, setPeriod] = useState("AM");
+  const navigate = useNavigate();
+
+  const handleHourChange = (e) => {
+    setHour(e.target.value);
+  };
+
+  const handleMinuteChange = (e) => {
+    setMinute(e.target.value);
+  };
 
   const generateMinutesOptions = () => {
     const options = [];
@@ -20,26 +30,32 @@ function MudangiManagementAddPage() {
     return options;
   };
 
-  const handleHourChange = (e) => {
-    setHour(e.target.value);
-  };
+  const handleSave = async () => {
+    const timeslot = `${hour}:${minute}`;
 
-  const handleMinuteChange = (e) => {
-    setMinute(e.target.value);
-  };
+    try {
+      const response = await axios.post(
+        "http://110.15.135.250:8000/movement-service/admin/mudang",
+        { timeslot },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+          },
+        }
+      );
 
-  const handlePeriodChange = (e) => {
-    setPeriod(e.target.value);
-  };
-
-  const get12HourFormat = (hour) => {
-    let intHour = parseInt(hour, 10);
-    if (period === "PM" && intHour < 12) {
-      intHour += 12;
-    } else if (period === "AM" && intHour === 12) {
-      intHour = 0;
+      alert(response.data.message);
+      navigate("/mu");
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        console.error("Error:", error);
+        alert("서버에 연결할 수 없습니다.");
+      }
     }
-    return String(intHour).padStart(2, "0");
   };
 
   return (
@@ -55,27 +71,16 @@ function MudangiManagementAddPage() {
                   <label>시간</label>
                   <div className={styles.timePicker}>
                     <select
-                      value={period}
-                      onChange={handlePeriodChange}
-                      className={styles.timeSelect}
-                    >
-                      <option value="AM">AM</option>
-                      <option value="PM">PM</option>
-                    </select>
-                    <select
                       value={hour}
                       onChange={handleHourChange}
                       className={styles.timeSelect}
                     >
-                      {Array.from({ length: 12 }, (_, index) => (
+                      {Array.from({ length: 24 }, (_, index) => (
                         <option
                           key={index}
-                          value={String(index === 0 ? 12 : index).padStart(
-                            2,
-                            "0"
-                          )}
+                          value={String(index).padStart(2, "0")}
                         >
-                          {String(index === 0 ? 12 : index).padStart(2, "0")}
+                          {String(index).padStart(2, "0")}
                         </option>
                       ))}
                     </select>
@@ -94,7 +99,7 @@ function MudangiManagementAddPage() {
               </div>
             </div>
             <div className={styles.savebuttonContainer}>
-              <SaveButton />
+              <SaveButton onClick={handleSave} />
             </div>
           </div>
         </div>

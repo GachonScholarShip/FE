@@ -1,56 +1,98 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SearchBar from "../../components/SearchBar";
 import SaveButton from "../../components/SaveButton";
 import UserIcon from "../../assets/user.svg";
 import styles from "./UserAccountUpdatePage.module.css";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 function UserAccountUpdatePage() {
   const { userId } = useParams();
+  const location = useLocation();
+  const { state } = location;
 
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    name: "",
-    gender: "",
-    email: "",
-    studentId: "",
+    name: state?.name || "",
+    gender: state?.gender || "",
+    email: state?.email || "",
+    studentId: state?.studentId || "",
   });
 
-  useEffect(() => {
-    const users = [
-      {
-        baseId: 1,
-        name: "홍길동",
-        gender: "남",
-        email: "fsjdjf@gmail.com",
-        studentId: "202001",
-      },
-      {
-        baseId: 2,
-        name: "김철수",
-        gender: "남",
-        email: "kimchulsoo@gmail.com",
-        studentId: "202002",
-      },
-      {
-        baseId: 3,
-        name: "이영희",
-        gender: "여",
-        email: "leeyounghee@gmail.com",
-        studentId: "202003",
-      },
-    ];
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    const user = users.find((user) => user.baseId === parseInt(userId));
-    if (user) {
-      setUserData({
-        name: user.name,
-        gender: user.gender,
-        email: user.email,
-        studentId: user.studentId,
-      });
-    }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://110.15.135.250:8000/user-service/admin/user/${userId}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.data) {
+          setUserData({
+            name: response.data.name,
+            gender: response.data.gender,
+            email: response.data.email,
+            studentId: response.data.studentId,
+          });
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, [userId]);
+
+  const handleUpdateUser = async () => {
+    const updatedData = {
+      userId: userId,
+      username: userData.name,
+      sex: userData.gender === "MALE" ? "MALE" : "FEMALE",
+      email: userData.email,
+      studentId: userData.studentId,
+    };
+
+    try {
+      const response = await axios.patch(
+        "http://110.15.135.250:8000/user-service/admin/user",
+        updatedData,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.code === 200) {
+        alert("사용자 정보가 수정되었습니다.");
+        navigate("/ua");
+      }
+    } catch (error) {
+      setError("사용자 정보를 수정하는데 실패했습니다.");
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      }
+    }
+  };
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div>
@@ -95,8 +137,8 @@ function UserAccountUpdatePage() {
                         }
                       >
                         <option value="">성별을 선택해주세요</option>
-                        <option value="남">남</option>
-                        <option value="여">여</option>
+                        <option value="MALE">남</option>
+                        <option value="FEMALE">여</option>
                       </select>
                     </div>
                   </div>
@@ -130,8 +172,9 @@ function UserAccountUpdatePage() {
                 </div>
               </div>
             </div>
+            {error && <div className={styles.error}>{error}</div>}{" "}
             <div className={styles.savebuttonContainer}>
-              <SaveButton />
+              <SaveButton onClick={handleUpdateUser} />{" "}
             </div>
           </div>
         </div>
