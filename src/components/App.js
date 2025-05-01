@@ -4,12 +4,13 @@ import SignUpPage from "../pages/SignUpPage";
 import MainPage from "../pages/MainPage";
 import RoadPage from "../pages/RoadPage";
 import FloorPage from "../pages/FloorPage";
-import LibraryPage from "../pages/LibraryPage";
+import CafeteriaPage from "../pages/CafeteriaPage";
 import ConversationPage from "../pages/ConversationPage";
 import ARViewPage from "../pages/ARViewPage";
 import MapViewPage from "../pages/MapViewPage";
-import CentralLibraryPage from "../pages/CentralLibraryPage";
-import ElecLibraryPage from "../pages/ElecLibraryPage";
+import VisionCafePage from "../pages/VisionCafePage";
+import EduCafePage  from "../pages/EduCafePage";
+import DormCafePage from "../pages/DormCafePage";
 import UserAccountPage from "../pages/manager_pages/UserAccountPage";
 import UserAccountAddPage from "../pages/manager_pages/UserAccountAddPage";
 import UserAccountUpdatePage from "../pages/manager_pages/UserAccountUpdatePage";
@@ -41,15 +42,13 @@ function App() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/road" element={<RoadPage />} />
           <Route path="/building/:building/:floor" element={<FloorPage />} />
-          <Route path="/library" element={<LibraryPage />} />
+          <Route path="/cafeteria" element={<CafeteriaPage />} />
           <Route path="/conversation" element={<ConversationPage />} />
           <Route path="/ar" element={<ARViewPage />} />
           <Route path="/map" element={<MapViewPage />} />
-          <Route
-            path="/library/centrallibrary"
-            element={<CentralLibraryPage />}
-          />
-          <Route path="/library/eleclibrary" element={<ElecLibraryPage />} />
+          <Route path="/cafeteria/visionCafe" element={<VisionCafePage />} />
+          <Route path="/cafeteria/eduCafe" element={<EduCafePage />} />
+          <Route path="/cafeteria/dormCafe" element={<DormCafePage />} />
 
           {/* 관리자 페이지들 */}
           <Route path="/ua" element={<UserAccountPage />} />
