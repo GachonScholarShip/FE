@@ -37,7 +37,8 @@
 .button {
   width: 20%;
   max-width: 250px;
-  height: 40px;
+  height: auto;
+  min-height: 4vh;
   border-radius: 50px;
   margin-top: -40px;
   margin-bottom: 50px;
@@ -59,7 +60,7 @@
 .buttonText {
   text-align: center;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 1.5vw;
   text-align: center;
   color: #014f99;
 }
@@ -78,7 +79,7 @@
   table-layout: fixed;
   border-collapse: separate; /* 둥근 모서리를 위해 separate 사용 */
   border-spacing: 0;
-  font-size: 17px;
+  font-size: 1.1vw;
   color: #014f99;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   background-color: rgba(255, 255, 255, 0.9);
@@ -115,10 +116,12 @@
 }
 
 .foodCell {
-  text-align: left;
+  text-align: center;
   white-space: normal;
-  height: 180px;
   background-color: rgba(255, 255, 255, 0.6);
+  white-space: normal;         /* 줄바꿈 허용 */
+  word-break: break-word;      /* 단어 잘라서 줄바꿈 */
+  overflow-wrap: break-word;
 }
 
 .horizontalTable tr:last-child td:first-child {

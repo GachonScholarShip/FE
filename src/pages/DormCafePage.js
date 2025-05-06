@@ -296,7 +296,19 @@ function DormCafePage() {
                   const meal = dayMenu.meals.find((m) => m.time === mealTime);
                   return (
                     <td key={`${dayMenu.date}-${mealTime}`} className={styles.foodCell}> 
-                    {meal ? <div dangerouslySetInnerHTML={{ __html: meal.menu.join("<br />") }} /> : "-"}
+                    {meal ? (
+                      <div>
+                        {meal.menu.map((item, index) => (
+                          <div key={index}>
+                            <span style={{ display: "inline-block", wordBreak: "break-word" }}>
+                              - {item}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                     </td>
                   );
                 })}
