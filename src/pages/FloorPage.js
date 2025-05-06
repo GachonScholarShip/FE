@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import styles from "./FloorPage.module.css";
 import LectureModal from "../components/Lecturemodal";
 import modalStyles from "../components/Lecturemodal.module.css";
+import axios from "axios";
 
 const floorPlans = {
   비전타워: {
@@ -138,22 +139,7 @@ const floorPlans = {
     "6" : require("../assets/교대 6F.png"),
   },
 
-  AI공학관: {
-    "1" : null,
-    "2" : null,
-    "3" : null,
-    "4" : null,
-    "5" : null,
-    "6" : null,
-    "7" : null,
-  },
 };
-
-const buildings = [
-  "가천관", "공과대학2", "한의과대학", "바이오나노연구원", "법과대학",
-  "비전타워", "반도체대학", "글로벌센터", "공과대학1", "바이오나노대학",
-  "예술.체육대학2", "예술.체육대학1", "교육대학원", "AI공학관"
-];
 
 const classroomCoordinates = {
   비전타워: {
@@ -1335,44 +1321,107 @@ const classroomCoordinates = {
   },
 };
 
-// 임시 강의 데이터 (실제로는 데베 연결)
-const lectureInfo = {
-}
 
 
 function FloorPage() {
-  const { building = "비전타워", floor = "1" } = useParams();
+  const { building: initialBuilding = "비전타워", floor: initialFloor = "1" } = useParams();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [currentLecture, setCurrentLecture] = useState({});
+  const [buildingList, setBuildingList] = useState([]);
+  const [floorList, setFloorList] = useState([]);
+  const [currentBuilding, setCurrentBuilding] = useState(initialBuilding);
+  const [currentFloor, setCurrentFloor] = useState(initialFloor);
 
-  function handleBuildingClick(building) {
-    navigate(`/building/${building}/1`);
+  function handleBuildingClick(clickedBuilding) {
+    setCurrentBuilding(clickedBuilding);
+    navigate(`/building/${clickedBuilding}/1`); // 기본적으로 1층으로 이동
   }
 
-  function handleFloorClick(floor) {
-    navigate(`/building/${building}/${floor}`);
+  function handleFloorClick(clickedFloor) {
+    setCurrentFloor(clickedFloor);
+    navigate(`/building/${currentBuilding}/${clickedFloor}`);
   }
 
-  const floorImage = floorPlans[building]?.[floor] || floorPlans["비전타워"][1]; // 기본값은 비전타워 1층
+  const floorImage = floorPlans[currentBuilding]?.[currentFloor] || floorPlans["비전타워"]["1"]; // 기본값은 비전타워 1층
   const currentFloorClassrooms = useMemo(() => {
-    return classroomCoordinates[building]?.[floor] || [];
-  }, [building, floor]);
+    return classroomCoordinates[currentBuilding]?.[currentFloor] || [];
+  }, [currentBuilding, currentFloor]);
 
-  // currentBuildingLectures를 useMemo로 메모이제이션
-  const currentBuildingLectures = useMemo(() => lectureInfo[building] || {}, [building]);
-
-  const openModal = useCallback((classroomName, event) => {
-    const x =  event.pageX + 20;
+  const getCurrentPeriod = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+    const day = dayNames[now.getDay()];
+  
+    // 1교시: 09시 ~ 17시까지 (9교시까지)
+    if (hour >= 9 && hour <= 17) {
+      const period = hour - 8; // 09시는 1교시니까 -8
+      return `${day}${period}`;
+    }
+  
+    return null;
+  };
+  
+  const openModal = useCallback(async (classroomName, event) => {
+    const x = event.pageX + 20;
     const y = event.pageY - 90;
-
     setModalPosition({ x, y });
     setSelectedRoom(classroomName);
-    setCurrentLecture(currentBuildingLectures[classroomName] || {});
+    setCurrentLecture({});
     setIsModalOpen(true);
-  }, [currentBuildingLectures]);  // currentBuildingLectures를 의존성 배열에 추가
+  
+    const currentSlot = getCurrentPeriod(); // 예: "수6"
+    console.log("현재 요일 및 교시:", currentSlot);
+    if (!currentSlot) {
+      setCurrentLecture({
+        title: "현재 교시가 아니거나 수업이 없습니다.",
+        professor: "",
+        schedule: "",
+      });
+      return;
+    }
+  
+    try {
+      const response = await axios.get(
+        "http://110.15.135.250:8000/classes/v1/classes",
+        {
+          headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const classList = response.data;
+  
+      const filtered = classList.filter((cls) => {
+        return (
+          cls.buildingName === currentBuilding &&
+          cls.roomName === classroomName &&
+          cls.courseTime?.replace(/\s/g, "").split(",").includes(currentSlot)
+        );
+      });
+  
+      if (filtered.length > 0) {
+        setCurrentLecture(filtered[0]);
+      } else {
+        setCurrentLecture({
+          title: "현재 진행 중인 강의가 없습니다.",
+          professor: "",
+          schedule: "",
+        });
+      }
+    } catch (err) {
+      console.error("강의 조회 실패", err);
+      setCurrentLecture({
+        title: "강의 정보를 불러오는 데 실패했습니다.",
+        professor: "",
+        schedule: "",
+      });
+    }
+  }, []);  
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
@@ -1396,12 +1445,12 @@ function FloorPage() {
   // 이미지 리사이즈 및 좌표 업데이트
   useEffect(() => {
     const updateCoords = () => {
-      const img = document.querySelector(`img[usemap="#floorMap-${building}-${floor}"]`);
+      const img = document.querySelector(`img[usemap="#floorMap-${currentBuilding}-${currentFloor}"]`);
       if (!img) return;
       const width = img.clientWidth;
       const height = img.clientHeight;
 
-      const areas = document.querySelectorAll(`map[name="floorMap-${building}-${floor}"] area`);
+      const areas = document.querySelectorAll(`map[name="floorMap-${currentBuilding}-${currentFloor}"] area`);
       areas.forEach(area => {
         try {
           const rawData = area.dataset.coords;
@@ -1423,7 +1472,44 @@ function FloorPage() {
     updateCoords();
     window.addEventListener("resize", updateCoords);
     return () => window.removeEventListener("resize", updateCoords);
-  }, [building, floor, currentFloorClassrooms]);
+  }, [currentBuilding, currentFloor, currentFloorClassrooms]);
+
+  useEffect(() => {
+    axios.get("http://110.15.135.250:8000/building-service/member/building", {
+      headers: {
+        'Authorization': "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+              "Content-Type": "application/json",
+      },
+    })
+    .then((res) => {
+      console.log("건물 목록 API 응답:", res.data);
+      setBuildingList(res.data.data || []); // API에서 받아온 건물 리스트 설정
+      console.log("buildingList 상태:", buildingList);
+    })
+    .catch((error) => {
+      console.error("건물 목록을 불러오는 데 실패했습니다:", error);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (currentBuilding) {
+      axios.get(`http://110.15.135.250:8000/building-service/member/building/${currentBuilding}`, {
+        headers: {
+          'Authorization': "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(`${currentBuilding} 층 목록 API 응답:`, res.data);
+        setFloorList(res.data?.data?.floors || []);
+        console.log("floorList 상태:", floorList);
+      })
+      .catch((error) => {
+        console.error(`${currentBuilding}의 층 정보를 불러오는 데 실패했습니다:`, error);
+        setFloorList([]);
+      });
+    }
+  }, [currentBuilding]);
 
   return (
     <div>
@@ -1431,18 +1517,18 @@ function FloorPage() {
       <div className={styles.bg} />
       <div className={styles.content}>
         <div className={styles.titleBox}>
-          <h2 className={styles.title}>{building} {floor}층</h2>
+          <h2 className={styles.title}>{currentBuilding} {currentFloor}층</h2>
         </div>
 
         <div className={styles.mainContainer}>
           <img
             src={floorImage}
-            alt={`${building} ${floor}층`}
+            alt={`${currentBuilding} ${currentFloor}층`}
             className={styles.floorImage}
-            useMap={`#floorMap-${building}-${floor}`}
+            useMap={`#floorMap-${currentBuilding}-${currentFloor}`}
           />
-          <map name={`floorMap-${building}-${floor}`}>
-            {currentFloorClassrooms.map((classroom, index) => (
+          <map name={`floorMap-${currentBuilding}-${currentFloor}`}>
+            {(currentFloorClassrooms || []).map((classroom, index) => (
               <area
                 key={index}
                 shape={classroom.shape}
@@ -1455,13 +1541,14 @@ function FloorPage() {
             ))}
           </map>
 
-          <div className={styles.floorList}>
+          <div className={styles.floorList}
+          style={{ marginTop: floorList.length > 11 ? '-11vh' : '-9vh' }}>
             <ul>
-              {Object.keys(floorPlans[building] || {}).map((fl) => (
+              {(floorList || []).map((fl) => (
                 <li
                   key={fl}
                   onClick={() => handleFloorClick(fl)}
-                  className={fl === floor ? `${styles.floorItem} ${styles.active}` : styles.floorItem}
+                  className={fl === currentFloor ? `${styles.floorItem} ${styles.active}` : styles.floorItem}
                 >
                   {fl}
                 </li>
@@ -1471,11 +1558,11 @@ function FloorPage() {
 
           <div className={styles.buildingList}>
             <ul>
-              {buildings.map((bld, index) => (
+              {(buildingList || []).map((bld) => (
                 <li
-                  key={index}
+                  key={bld}
                   onClick={() => handleBuildingClick(bld)}
-                  className={bld === building ? `${styles.buildingItem} ${styles.active}` : styles.buildingItem}
+                  className={bld === currentBuilding ? `${styles.buildingItem} ${styles.active}` : styles.buildingItem}
                 >
                   {bld}
                 </li>
@@ -1487,11 +1574,11 @@ function FloorPage() {
 
       {isModalOpen && selectedRoom && currentLecture && (
         <LectureModal
-          building={building}
+          building={currentBuilding}
           room={selectedRoom}
           lectureData={currentLecture}
           position={modalPosition}
-          styles={modalStyles} 
+          styles={modalStyles}
         />
       )}
     </div>
