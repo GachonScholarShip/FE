@@ -30,8 +30,8 @@
 
 .chatContent { 
   width: 60%;
-  max-width: 1000px;
-  height: 650px;
+  max-width: 900px;
+  height: 70vh;
   border-radius: 10px;
   margin-top: 40px;
   margin-left: 60px;
@@ -55,26 +55,26 @@
 .userMessage {
   background: rgba(1, 79, 153, 0.8);
   color: white;
-  padding: 10px 15px;
+  padding: 1% 2%;
   border-radius: 10px;
-  margin: 5px;
-  max-width: 60%;
+  max-width: 40%;
   word-wrap: break-word;
   align-self: flex-end;
   text-align: right;
+  font-size: 0.9vw;
 }
 
 /* AI 메시지 (왼쪽 정렬) */
 .aiMessage {
   background:  rgba(255, 255, 255, 0.8);
-  color: black;
-  padding: 10px 15px;
+  color: #014f99;
+  padding: 1% 2%;
   border-radius: 10px;
-  margin: 5px;
-  max-width: 60%;
+  max-width: 40%;
   word-wrap: break-word;
   align-self: flex-start;
   text-align: left;
+  font-size: 0.9vw;
 }
 
 /* 입력창을 항상 아래에 고정 */
@@ -87,68 +87,114 @@
   position: absolute;
   bottom: 0;
   position: relative;
+  font-size: 0.9vw;
 }
 
 .input {
-  width: 80%;
+  width: 100%;
   padding: 12px;
   border: 2px solid #014f99;
   border-radius: 40px;
-  font-size: 16px;
+  font-size: 0.9vw;
 }
 
 
 .busContent {
   width: 40%;
   max-width: 900px;
-  height: 650px;
+  height: 55vh;
   margin-top: 30px;
   margin-left: 100px;
 }
 
 .busBox {
-  max-width: 400px;
-  height: 550px;
+  max-width: 23vw;
+  height: 100%;
   margin-top: 20px;
   border-radius: 30px;
   background-color: rgba(1, 79, 153, 0.4);
+  font-weight: bold;
+  color: #014f99;
+  font-size: 1.75vw;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center; /* 수직 정렬 */
+  align-items: center; /* 수평 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
   z-index: 3;
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.timetable {
-  width: 100px;
-  height: 150px;
-  margin-bottom: 45px;
-}
 
 .busText {
   text-align: center;
   font-weight: bold;
   margin-top: 20px;
-  font-size: 25px;
+  font-size: 1.9vw;
   color: #014f99;
 }
+
+.nextBusTextWrapper {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin-bottom: 10px;
+}
+
+.nextBusText {
+  font-size: 1.5vw;
+  font-weight: bold;
+  color: #014f99; /* 기존 스타일과 일관성 있는 파란색 */
+}
+
+.busTimesList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: center; /* 시간대가 중앙 정렬되도록 */
+}
+
+.nextBusItem {
+  font-size: 1.2vw;
+  color: #014f99; /* 파란색으로 강조 */
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.noNextBus {
+  font-size: 1.2vw;
+  color: #014f99;
+  font-weight: bold;
+}
+
 
 .messageWrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   margin: 5px 0;
   position: relative;
 }
 
-/* 메시지 시간 스타일 */
+.messageRowLeft {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row; /* 왼쪽부터 AI 말풍선 → 시간 */
+  gap: 8px;
+}
+
+.messageRowRight {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row-reverse; /* 오른쪽부터 사용자 말풍선 ← 시간 */
+  gap: 8px;
+}
+
 .messageTime {
   font-size: 12px;
-  color: black;
-  margin-top: 5px;
-  text-align: right;
+  color: #014f99;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
+
 
 .aiProfile {
   margin-right: 10px;

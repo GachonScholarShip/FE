@@ -46,7 +46,7 @@ const buildings = [
 const classBuildings = [
   "가천관", "공과대학2", "한의과대학", "바이오나노연구원",
   "법과대학", "비전타워", "반도체대학", "글로벌센터", "공과대학1", "바이오나노대학",
-  "예술.체육대학2", "예술.체육대학1", "교육대학원", "AI공학관"
+  "예술.체육대학2", "예술.체육대학1", "교육대학원"
 ];
 
 const etc = [
@@ -78,7 +78,11 @@ function RoadPage() {
   }, [setModalVisible, setSelectedBuilding, setShowFloorButton]);
 
   const handleNavigation = (path) => {
-    navigate(path);
+    if (path === "/ar" || path === "/map" && selectedBuilding) {
+      navigate(path, { state: { selectedBuilding: selectedBuilding } });
+    } else {
+      navigate(path);
+    }
   };
 
   useEffect(() => {
