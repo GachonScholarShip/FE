@@ -20,17 +20,17 @@ const LectureModal = ({ building, room, lectureData, position, styles }) => {
       className={styles['lecture-modal']}
       style={{ 
         position: 'absolute',
-        left: `${position.x}px`, 
-        top: `${position.y}px`,
+        left: `calc(${position.x}vw + 9vw)`, 
+        top: `${position.y}vh`,
       }}
     >
-      <div className="lecture-modal-content">
-        <p className="lecture-time">{formattedTime}</p>
-        <p className="lecture-location">{building} - <strong>{room}</strong></p>
-        <h2 className="lecture-status">〈현재 진행 중인 강의〉</h2>
-        <h3 className="lecture-title">{lectureData.title}</h3>
-        <p className="lecture-professor">{lectureData.professor}</p>
-        <p className="lecture-schedule">{lectureData.schedule}</p>
+      <div className={styles['lecture-modal-content']}>
+        <p className={styles['lecture-time']}>{formattedTime}</p>
+        <p className={styles['lecture-location']}>{building} - <strong>{room}</strong></p>
+        <p className={styles['lecture-status']}>〈현재 진행 중인 강의〉</p>
+        <p className={styles['lecture-title']}>{lectureData.title}</p>
+        <p className={styles['lecture-professor']}>{lectureData.professor}</p>
+        <p className={styles['lecture-schedule']}>{lectureData.courseTime}</p>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@
 .lecture-modal::before {
   content: '';
   position: absolute;
-  top: 50%;
+  top: 8vh;
   left: -1.03vw; /* 꼬리의 위치를 미세 조정 */
   transform: translateY(-50%) rotate(315deg); /* 삼각형 회전 */
   width: 1.5vw;
@@ -45,33 +45,40 @@
 }
 
 .lecture-time {
-  font-weight: bold;
-  color: #003366;
+  margin-top: 1vw;
+  font-size:0.8vw;
+  color: #005BAC;
 }
 
 .lecture-location {
-  font-weight: bold;
-  color: #003366;
+  font-size:0.8vw;
+  margin-bottom: 1.5vw;
+  color: #005BAC;
 }
 
 .lecture-status {
   font-size: 1.2vw;
+  margin-bottom: 1.2vw;
   color: #005BAC;
-  margin: 10px 0;
 }
 
 .lecture-title {
-  font-size: 1.5px;
+  font-size: 1.1vw;
+  margin-bottom: 0.5vw;
   font-weight: bold;
-  color: #003366;
+  color: #005BAC;
 }
 
 .lecture-professor {
-  font-size: 1.1vw;
-  color: #333;
+  font-size: 0.8vw;
+  margin-bottom: 0.5vw;
+  font-weight: bold;
+  color: #005BAC;
 }
 
 .lecture-schedule {
-  font-size: 1vw;
-  color: #333;
+  font-size: 0.8vw;
+  margin-bottom: 2vw;
+  font-weight: bold;
+  color: #005BAC;
 }

@@ -62,14 +62,18 @@ function RoadPage() {
   const mapImageRef = useRef(null); // 이미지 요소에 대한 ref 생성
 
   const openModal = useCallback((buildingName, event) => {
-    const x = event.pageX + 60;
-    const y = event.pageY;
-
-    setModalPosition({ x, y });
+    const img = mapImageRef.current;
+    if (!img) return;
+  
+    const rect = img.getBoundingClientRect();
+    const relativeX = (event.clientX - rect.left) / rect.width;
+    const relativeY = (event.clientY - rect.top) / rect.height;
+  
+    setModalPosition({ x: relativeX, y: relativeY });
     setSelectedBuilding(buildingName);
     setShowFloorButton(classBuildings?.includes(buildingName) || false);
     setModalVisible(true);
-  }, [classBuildings]); // classBuildings는 useCallback 외부 스코프에서 정의되었으므로 dependency array에서 제거
+  }, []);
 
   const closeModal = useCallback(() => {
     setModalVisible(false);
@@ -193,10 +197,19 @@ function RoadPage() {
         </div>
       </div>
 
-      {modalVisible && (
+      {modalVisible && mapImageRef.current && (() => {
+      const imgRect = mapImageRef.current.getBoundingClientRect();
+      const modalX = imgRect.left + modalPosition.x * imgRect.width;
+      const modalY = imgRect.top + modalPosition.y * imgRect.height;
+
+      return (
         <div
           className={styles.modal}
-          style={{ top: `${modalPosition.y}px`, left: `${modalPosition.x}px` }}
+          style={{
+            position: 'absolute',
+            top: `${modalY}px`,
+            left: `${modalX}px`,
+          }}
         >
           <div className={styles.modalContent}>
             <h3>{selectedBuilding}</h3>
@@ -213,7 +226,8 @@ function RoadPage() {
             )}
           </div>
         </div>
-      )}
+      );
+    })()}
     </div>
   );
 }
