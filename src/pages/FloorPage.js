@@ -1598,12 +1598,17 @@ function FloorPage() {
       { start: 9, end: 10, period: "1" },
       { start: 10, end: 11, period: "2" },
       { start: 11, end: 12, period: "3" },
-      { start: 13, end: 14, period: "4" },
-      { start: 14, end: 15, period: "5" },
-      { start: 15, end: 16, period: "6" },
-      { start: 16, end: 17, period: "7" },
-      { start: 17, end: 18, period: "8" },
-      { start: 18, end: 19, period: "9" },
+      { start: 12, end: 13, period: "4" },
+      { start: 13, end: 14, period: "5" },
+      { start: 14, end: 15, period: "6" },
+      { start: 15, end: 16, period: "7" },
+      { start: 16, end: 17, period: "8" },
+      { start: 17, end: 18, period: "9" },
+      { start: 18, end: 19, period: "10" },
+      { start: 19, end: 20, period: "11" },
+      { start: 20, end: 21, period: "12" },
+      { start: 21, end: 22, period: "13" },
+      { start: 22, end: 23, period: "14" },
     ];
   
     const currentPeriod = periods.find(p => hour >= p.start && hour < p.end);
