@@ -16,13 +16,14 @@ const LectureModal = ({ building, room, lectureData, position, styles }) => {
     `${currentTime.getHours()}시 ${currentTime.getMinutes()}분`;
 
   return (
-    <div 
+    <div
       className={styles['lecture-modal']}
-      style={{ 
-        position: 'absolute',
-        left: `${position.x}px`, 
-        top: `${position.y}px`,
+      style={{
+        position: 'fixed', // 뷰포트 기준으로 위치 고정
+        left: `${position.x + 9}vw`, // FloorPage에서 계산된 x 좌표 적용
+        top: `${position.y - 8}vh`,   // FloorPage에서 계산된 y 좌표 적용
       }}
+      onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 닫힘 방지 (선택 사항)
     >
       <div className="lecture-modal-content">
         <p className="lecture-time">{formattedTime}</p>
@@ -30,7 +31,7 @@ const LectureModal = ({ building, room, lectureData, position, styles }) => {
         <h2 className="lecture-status">〈현재 진행 중인 강의〉</h2>
         <h3 className="lecture-title">{lectureData.title}</h3>
         <p className="lecture-professor">{lectureData.professor}</p>
-        <p className="lecture-schedule">{lectureData.schedule}</p>
+        <p className="lecture-schedule">{lectureData.courseTime}</p>
       </div>
     </div>
   );
