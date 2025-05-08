@@ -17,7 +17,7 @@ function QRcodeManagementPage() {
   const [qrCodes, setQrCodes] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pageSize = 4;
+  const pageSize = 3;
 
   useEffect(() => {
     const fetchQRCodes = async () => {
