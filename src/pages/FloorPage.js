@@ -4,33 +4,38 @@ import NavBar from "../components/NavBar";
 import styles from "./FloorPage.module.css";
 import LectureModal from "../components/Lecturemodal";
 import modalStyles from "../components/Lecturemodal.module.css";
+import axios from "axios";
 
 const floorPlans = {
   비전타워: {
-    B3 : require("../assets/visiontowerB3.png"),
-    B2 : require("../assets/visiontowerB2.png"),
-    B1 : require("../assets/visiontowerB1.png"),
-    "1" : require("../assets/visiontower1.png"),
-    "2" : require("../assets/visiontower1.png"),
-    "3": require("../assets/visiontower3.png"),
-    "4": require("../assets/visiontower4.png"),
-    "5" : require("../assets/visiontower1.png"),
-    "6" : require("../assets/visiontower1.png"),
-    "7" : require("../assets/visiontower1.png"),
+    B3 : require("../assets/비전타워&법대 B3F.png"),
+    B2 : require("../assets/비전타워&법대 B2F.png"),
+    B1 : require("../assets/비전타워&법대 B1F.png"),
+    "1" : require("../assets/비전타워&법대 1F.png"),
+    "2" : require("../assets/비전타워&법대 2F.jpg"),
+    "3": require("../assets/비전타워&법대 3F.png"),
+    "4": require("../assets/비전타워&법대 4F.png"),
+    "5" : require("../assets/비전타워&법대 5F.png"),
+    "6" : require("../assets/비전타워&법대 6F.jpg"),
   },
   가천관: {
-    B1 : require("../assets/visiontowerB3.png"),
-    "1" : require("../assets/visiontowerB3.png"),
-    "2" : require("../assets/visiontowerB3.png"),
-    "3" : require("../assets/visiontowerB3.png"),
-    "4" : require("../assets/visiontowerB3.png"),
-    "5" : require("../assets/visiontowerB3.png"),
-    "6" : require("../assets/visiontowerB3.png"),
-    "7" : require("../assets/visiontowerB3.png"),
-    "8" : require("../assets/visiontowerB3.png"),
+    B2 : require("../assets/가천관 B2F.JPG"),
+    B1 : require("../assets/가천관 B1F.JPG"),
+    "1" : require("../assets/가천관 1F.JPG"),
+    "2" : require("../assets/가천관 2F.JPG"),
+    "3" : require("../assets/가천관 3F.JPG"),
+    "4" : require("../assets/가천관 4F.JPG"),
+    "5" : require("../assets/가천관 5F.JPG"),
+    "6" : require("../assets/가천관 6F.JPG"),
+    "7" : require("../assets/가천관 7F.JPG"),
+    "8" : require("../assets/가천관 8F.JPG"),
+    "9" : require("../assets/가천관 9F.JPG"),
+    "10" : require("../assets/가천관 10F.JPG"),
+    "11" : require("../assets/가천관 11F.JPG"),
   },
 
   공과대학2: {
+    B1 : require("../assets/공대1 B1.png"),
     "1" : require("../assets/공대2 1F.png"),
     "2" : require("../assets/공대2 2F.png"),
     "3" : require("../assets/공대2 3F.png"),
@@ -57,13 +62,15 @@ const floorPlans = {
   },
 
   법과대학: {
-    "1" : require("../assets/visiontower1.png"),
-    "2" : require("../assets/visiontower1.png"),
-    "3": require("../assets/visiontower3.png"),
-    "4": require("../assets/visiontower4.png"),
-    "5" : require("../assets/visiontower1.png"),
-    "6" : require("../assets/visiontower1.png"),
-    "7" : require("../assets/visiontower1.png"),
+    B3 : require("../assets/비전타워&법대 B3F.png"),
+    B2 : require("../assets/비전타워&법대 B2F.png"),
+    B1 : require("../assets/비전타워&법대 B1F.png"),
+    "1" : require("../assets/비전타워&법대 1F.png"),
+    "2" : require("../assets/비전타워&법대 2F.jpg"),
+    "3": require("../assets/비전타워&법대 3F.png"),
+    "4": require("../assets/비전타워&법대 4F.png"),
+    "5" : require("../assets/비전타워&법대 5F.png"),
+    "6" : require("../assets/비전타워&법대 6F.jpg"),
   },
 
   반도체대학: {
@@ -138,33 +145,172 @@ const floorPlans = {
     "6" : require("../assets/교대 6F.png"),
   },
 
-  AI공학관: {
-    "1" : null,
-    "2" : null,
-    "3" : null,
-    "4" : null,
-    "5" : null,
-    "6" : null,
-    "7" : null,
-  },
 };
-
-const buildings = [
-  "가천관", "공과대학2", "한의과대학", "바이오나노연구원", "법과대학",
-  "비전타워", "반도체대학", "글로벌센터", "공과대학1", "바이오나노대학",
-  "예술.체육대학2", "예술.체육대학1", "교육대학원", "AI공학관"
-];
 
 const classroomCoordinates = {
   비전타워: {
-
+    "2": [
+      { name: "207", coords: [0.7430, 0.6100, 0.7785, 0.6767], shape: "rect" },
+      { name: "208", coords: [0.7430, 0.5433, 0.7813, 0.6083], shape: "rect" },
+      { name: "209", coords: [0.7402, 0.4733, 0.7822, 0.5383], shape: "rect" },
+      { name: "210", coords: [0.7430, 0.4033, 0.7813, 0.4683], shape: "rect" },
+      { name: "211", coords: [0.7430, 0.3383, 0.7822, 0.4033], shape: "rect" },
+      { name: "212", coords: [0.7421, 0.2650, 0.7832, 0.3350], shape: "rect" },
+      { name: "204", coords: [0.6280, 0.2650, 0.7290, 0.3300], shape: "rect" },
+      { name: "206", coords: [0.7065, 0.2417, 0.7486, 0.2650], shape: "rect" },
+    ],
+    "3": [
+      { name: "317", coords: [0.6192, 0.0317, 0.6813, 0.1817], shape: "rect" },
+      { name: "318", coords: [0.5603, 0.0283, 0.6192, 0.1867], shape: "rect" },
+      { name: "319", coords: [0.5028, 0.0317, 0.5603, 0.1883], shape: "rect" },
+      { name: "320", coords: [0.4430, 0.0283, 0.5028, 0.1883], shape: "rect" },
+      { name: "314", coords: [0.6226, 0.2233, 0.6839, 0.3733], shape: "rect" },
+      { name: "315", coords: [0.5631, 0.2283, 0.6192, 0.3733], shape: "rect" },
+      { name: "316", coords: [0.5028, 0.2283, 0.5631, 0.3717], shape: "rect" },
+      { name: "324", coords: [0.1505, 0.0383, 0.2093, 0.1983], shape: "rect" },
+      { name: "325", coords: [0.0897, 0.0333, 0.1477, 0.1933], shape: "rect" },
+      { name: "330", coords: [0.0327, 0.2583, 0.0897, 0.3733], shape: "rect" },
+      { name: "331", coords: [0.0308, 0.3783, 0.0897, 0.4883], shape: "rect" },
+      { name: "332", coords: [0.0271, 0.4883, 0.0897, 0.6017], shape: "rect" },
+      { name: "333", coords: [0.0271, 0.6033, 0.0897, 0.7133], shape: "rect" },
+      { name: "334", coords: [0.0271, 0.7183, 0.0870, 0.8283], shape: "rect" },
+      { name: "335", coords: [0.0243, 0.8283, 0.0859, 0.9517], shape: "rect" },
+      { name: "336", coords: [0.1093, 0.4817, 0.1811, 0.6367], shape: "rect" },
+      { name: "323", coords: [0.1131, 0.8367, 0.1704, 0.9883], shape: "rect" },
+      { name: "326", coords: [0.2019, 0.8367, 0.2626, 0.9400], shape: "rect" }
+    ],    
+    "4": [
+      { name: "430", coords: [0.0383, 0.2683, 0.1009, 0.3867], shape: "rect" },
+      { name: "431", coords: [0.0383, 0.3883, 0.1028, 0.4983], shape: "rect" },
+      { name: "432", coords: [0.0383, 0.5017, 0.1028, 0.6083], shape: "rect" },
+      { name: "433", coords: [0.0383, 0.6117, 0.1028, 0.7217], shape: "rect" },
+      { name: "434", coords: [0.0383, 0.7283, 0.1028, 0.8333], shape: "rect" },
+      { name: "435", coords: [0.0383, 0.8383, 0.1028, 0.9517], shape: "rect" },
+      { name: "427", coords: [0.2206, 0.4967, 0.2850, 0.6133], shape: "rect" },
+      { name: "428", coords: [0.2206, 0.3833, 0.2827, 0.4933], shape: "rect" },
+      { name: "429", coords: [0.2187, 0.2633, 0.2827, 0.3833], shape: "rect" },
+      { name: "426", coords: [0.0972, 0.0467, 0.1589, 0.1983], shape: "rect" },
+      { name: "425", coords: [0.1589, 0.0433, 0.2206, 0.2017], shape: "rect" },
+      { name: "419", coords: [0.6393, 0.0333, 0.7009, 0.1883], shape: "rect" },
+      { name: "420", coords: [0.5806, 0.0367, 0.6393, 0.1933], shape: "rect" },
+      { name: "421", coords: [0.5196, 0.0383, 0.5766, 0.1933], shape: "rect" },
+      { name: "422", coords: [0.4598, 0.0417, 0.5196, 0.1917], shape: "rect" },
+      { name: "415", coords: [0.6411, 0.2333, 0.7037, 0.3733], shape: "rect" },
+      { name: "416", coords: [0.5785, 0.2333, 0.6393, 0.3817], shape: "rect" },
+      { name: "417", coords: [0.5215, 0.2367, 0.5766, 0.3833], shape: "rect" },
+      { name: "418", coords: [0.4604, 0.2383, 0.5196, 0.3783], shape: "rect" }
+    ],
+    "5": [
+      { name: "523", coords: [0.0327, 0.2617, 0.0897, 0.3750], shape: "rect" },
+      { name: "524", coords: [0.0299, 0.3767, 0.0897, 0.4867], shape: "rect" },
+      { name: "525", coords: [0.0271, 0.4917, 0.0897, 0.6000], shape: "rect" },
+      { name: "515", coords: [0.1121, 0.8317, 0.1701, 0.9800], shape: "rect" },
+      { name: "520", coords: [0.2037, 0.4917, 0.2645, 0.6000], shape: "rect" },
+      { name: "521", coords: [0.2037, 0.3717, 0.2654, 0.4867], shape: "rect" },
+      { name: "522", coords: [0.2047, 0.2583, 0.2678, 0.3733], shape: "rect" },
+      { name: "502", coords: [0.6226, 0.0283, 0.6775, 0.1833], shape: "rect" },
+      { name: "503", coords: [0.5603, 0.0283, 0.6192, 0.1867], shape: "rect" },
+      { name: "507", coords: [0.4430, 0.2317, 0.5000, 0.3733], shape: "rect" },
+      { name: "508", coords: [0.5028, 0.2267, 0.5603, 0.3767], shape: "rect" },
+      { name: "509", coords: [0.5631, 0.2233, 0.6192, 0.3717], shape: "rect" },
+      { name: "510", coords: [0.6226, 0.2217, 0.6839, 0.3717], shape: "rect" }
+    ],
+    "6": [
+      { name: "612", coords: ["0.2289", "0.4000", "0.2900", "0.5017"], shape: "rect" },
+      { name: "613", coords: ["0.2289", "0.2882", "0.2900", "0.3950"], shape: "rect" },
+      { name: "607", coords: ["0.2300", "0.0780", "0.2951", "0.2282"], shape: "rect" },
+      { name: "608", coords: ["0.1700", "0.0802", "0.2300", "0.2282"], shape: "rect" },
+      { name: "609", coords: ["0.1050", "0.0780", "0.1679", "0.2282"], shape: "rect" },
+      { name: "615", coords: ["0.0477", "0.2912", "0.1112", "0.3967"], shape: "rect" },
+      { name: "616", coords: ["0.0458", "0.3950", "0.1112", "0.4950"], shape: "rect" },
+      { name: "617", coords: ["0.0458", "0.5017", "0.1112", "0.6017"], shape: "rect" },
+      { name: "618", coords: ["0.0477", "0.6050", "0.1112", "0.7050"], shape: "rect" },
+      { name: "619", coords: ["0.0495", "0.7100", "0.1112", "0.8150"], shape: "rect" },
+    ],
   },
 
   가천관: {
-
+    "B1": [
+      { name: "B101", coords: [0.2804, 0.495, 0.3813, 0.7117], shape: "rect" },
+      { name: "B102", coords: [0.3963, 0.47, 0.4421, 0.5317], shape: "rect" },
+      { name: "B103", coords: [0.3963, 0.5317, 0.4421, 0.5917], shape: "rect" },
+      { name: "B105", coords: [0.3963, 0.65, 0.4421, 0.7083], shape: "rect" },      
+    ],
+    "3": [
+      { name: "314", coords: [0.0757, 0.095, 0.2103, 0.2767], shape: "rect" },
+      { name: "315", coords: [0.2121, 0.105, 0.3514, 0.2783], shape: "rect" },
+      { name: "316", coords: [0.6505, 0.1, 0.7925, 0.285], shape: "rect" },
+      { name: "317", coords: [0.7963, 0.11, 0.9346, 0.285], shape: "rect" },
+      { name: "313", coords: [0.0738, 0.515, 0.1383, 0.795, 0.2075, 0.7617, 0.2093, 0.5217], shape: "poly" },
+      { name: "312", coords: [0.2112, 0.52, 0.3252, 0.5217, 0.3234, 0.7017, 0.2112, 0.755], shape: "poly" },
+      { name: "302", coords: [0.6785, 0.525, 0.7944, 0.5283, 0.7925, 0.765, 0.6785, 0.7], shape: "poly" },
+      { name: "301", coords: [0.7963, 0.5283, 0.9327, 0.53, 0.9346, 0.8067, 0.8738, 0.8083, 0.7944, 0.77], shape: "poly" },
+    ],
+    "4": [
+      { name: "415", coords: [0.071, 0.125, 0.2075, 0.2933], shape: "rect" },
+      { name: "416", coords: [0.2093, 0.1317, 0.3206, 0.295], shape: "rect" },
+      { name: "419", coords: [0.5589, 0.1383, 0.6355, 0.305], shape: "rect" },
+      { name: "420", coords: [0.6374, 0.1417, 0.7112, 0.305], shape: "rect" },
+      { name: "421", coords: [0.715, 0.1417, 0.785, 0.3067], shape: "rect" },
+      { name: "422", coords: [0.7907, 0.145, 0.9252, 0.3067], shape: "rect" },
+      { name: "414", coords: [0.0654, 0.52, 0.0636, 0.7983, 0.1215, 0.7917, 0.2019, 0.755, 0.2037, 0.525], shape: "poly" },
+      { name: "413", coords: [0.2075, 0.5217, 0.2056, 0.745, 0.3224, 0.6917, 0.3215, 0.525], shape: "poly" },
+      { name: "403", coords: [0.6748, 0.5317, 0.673, 0.6983, 0.785, 0.7567, 0.785, 0.5333], shape: "poly" },
+      { name: "402", coords: [0.7869, 0.535, 0.8636, 0.535, 0.8626, 0.8067, 0.7888, 0.7583], shape: "poly" },
+      { name: "401", coords: [0.8636, 0.5383, 0.9234, 0.5383, 0.9252, 0.8117, 0.8654, 0.8083], shape: "poly" },
+    ],
+    "5": [
+      { name: "514", coords: [0.0636, 0.1283, 0.2019, 0.3017], shape: "rect" },
+      { name: "515", coords: [0.2037, 0.1383, 0.3215, 0.2967], shape: "rect" },
+      { name: "518", coords: [0.6056, 0.1450, 0.6701, 0.3033], shape: "rect" },
+      { name: "519", coords: [0.6729, 0.1483, 0.7869, 0.3083], shape: "rect" },
+      { name: "520", coords: [0.7907, 0.1533, 0.9252, 0.3100], shape: "rect" },
+      { name: "513", coords: [0.0654, 0.5217, 0.0617, 0.7883, 0.1065, 0.7883, 0.1981, 0.7517, 0.2000, 0.5267], shape: "poly" },
+      { name: "512", coords: [0.2019, 0.5250, 0.2019, 0.7433, 0.3168, 0.6933, 0.3178, 0.5317], shape: "poly" },
+      { name: "502", coords: [0.6701, 0.5383, 0.6701, 0.7017, 0.7869, 0.7633, 0.7869, 0.5383], shape: "poly" },
+      { name: "501", coords: [0.7907, 0.5383, 0.7907, 0.7650, 0.8804, 0.8217, 0.9308, 0.8217, 0.9262, 0.5450], shape: "poly" },
+      { name: "701", coords: [0.8056, 0.8750, 0.8579, 0.8800, 0.8579, 1.3333, 0.8084, 1.3300], shape: "poly" }
+    ],
+    "6": [
+      { name: "614", coords: [0.0860, 0.1300, 0.2159, 0.2850], shape: "rect" },
+      { name: "615", coords: [0.2187, 0.1333, 0.3308, 0.2883], shape: "rect" },
+      { name: "616", coords: [0.3336, 0.1333, 0.4439, 0.2900], shape: "rect" },
+      { name: "617", coords: [0.4467, 0.1400, 0.5551, 0.2917], shape: "rect" },
+      { name: "618", coords: [0.5579, 0.1433, 0.6673, 0.2950], shape: "rect" },
+      { name: "619", coords: [0.6692, 0.1483, 0.7776, 0.2983], shape: "rect" },
+      { name: "620", coords: [0.7794, 0.1533, 0.9103, 0.3050], shape: "rect" },
+      { name: "613", coords: [0.0850, 0.4950, 0.0822, 0.7433, 0.1401, 0.7517, 0.2168, 0.7217, 0.2168, 0.4983], shape: "poly" },
+      { name: "612", coords: [0.2215, 0.5000, 0.2206, 0.7117, 0.3289, 0.6583, 0.3308, 0.5033], shape: "poly" },
+      { name: "602", coords: [0.6673, 0.5150, 0.7710, 0.5150, 0.7757, 0.7350, 0.6664, 0.6700], shape: "poly" },
+      { name: "601", coords: [0.7813, 0.5183, 0.9140, 0.5217, 0.9112, 0.7850, 0.8692, 0.7800, 0.7813, 0.7317], shape: "poly" },
+    ],
+    "7": [
+      { name: "714", coords: [0.0776, 0.0983, 0.2131, 0.2583], shape: "rect" },
+      { name: "715", coords: [0.2131, 0.1017, 0.3308, 0.2583], shape: "rect" },
+      { name: "718", coords: [0.5626, 0.1117, 0.6804, 0.2700], shape: "rect" },
+      { name: "719", coords: [0.6841, 0.1133, 0.7925, 0.2683], shape: "rect" },
+      { name: "720", coords: [0.7963, 0.1100, 0.9308, 0.2717], shape: "rect" },
+      { name: "713", coords: [0.0748, 0.4817, 0.0757, 0.7383, 0.1336, 0.7383, 0.2112, 0.7000, 0.2112, 0.4817], shape: "poly" },
+      { name: "712", coords: [0.2150, 0.4783, 0.2112, 0.6933, 0.3308, 0.6433, 0.3308, 0.4867], shape: "poly" },
+      { name: "702", coords: [0.6794, 0.4900, 0.6766, 0.6483, 0.7888, 0.7117, 0.7897, 0.4917], shape: "poly" },
+      { name: "701", coords: [0.7963, 0.4917, 0.7935, 0.7133, 0.8850, 0.7583, 0.9271, 0.7600, 0.9262, 0.4967], shape: "poly" },
+    
+    ],
+    "8": [
+      { name: "824", coords: [0.0710, 0.0850, 0.2103, 0.2533], shape: "rect" },
+      { name: "840", coords: [0.8010, 0.1133, 0.9365, 0.2783], shape: "rect" },
+    ],
+    "9": [
+      { name: "940", coords: [0.7916, 0.1183, 0.9252, 0.2733], shape: "rect" },
+      { name: "924", coords: [0.0654, 0.1083, 0.2009, 0.2717], shape: "rect" },
+    ],
   },
 
   공과대학2: {
+    "B1": [
+      { name: "b101", coords: [0.341176, 0.175, 0.428037, 0.34], shape: "rect" },
+      { name: "B102", coords: [0.32, 0.346667, 0.424299, 0.538333], shape: "rect" }
+    ],
    "1": [
       { name: "101", coords: [0.268, 0.430, 0.324, 0.600], shape: "rect" },
       { name: "102", coords: [0.329, 0.490, 0.329, 0.720, 0.410, 0.720, 0.411, 0.427, 0.376, 0.430, 0.372, 0.490], shape: "poly" },
@@ -447,7 +593,84 @@ const classroomCoordinates = {
   },
 
   법과대학: {
-
+    "2": [
+      { name: "207", coords: [0.7430, 0.6100, 0.7785, 0.6767], shape: "rect" },
+      { name: "208", coords: [0.7430, 0.5433, 0.7813, 0.6083], shape: "rect" },
+      { name: "209", coords: [0.7402, 0.4733, 0.7822, 0.5383], shape: "rect" },
+      { name: "210", coords: [0.7430, 0.4033, 0.7813, 0.4683], shape: "rect" },
+      { name: "211", coords: [0.7430, 0.3383, 0.7822, 0.4033], shape: "rect" },
+      { name: "212", coords: [0.7421, 0.2650, 0.7832, 0.3350], shape: "rect" },
+      { name: "204", coords: [0.6280, 0.2650, 0.7290, 0.3300], shape: "rect" },
+      { name: "206", coords: [0.7065, 0.2417, 0.7486, 0.2650], shape: "rect" },
+    ],
+    "3": [
+      { name: "317", coords: [0.6192, 0.0317, 0.6813, 0.1817], shape: "rect" },
+      { name: "318", coords: [0.5603, 0.0283, 0.6192, 0.1867], shape: "rect" },
+      { name: "319", coords: [0.5028, 0.0317, 0.5603, 0.1883], shape: "rect" },
+      { name: "320", coords: [0.4430, 0.0283, 0.5028, 0.1883], shape: "rect" },
+      { name: "314", coords: [0.6226, 0.2233, 0.6839, 0.3733], shape: "rect" },
+      { name: "315", coords: [0.5631, 0.2283, 0.6192, 0.3733], shape: "rect" },
+      { name: "316", coords: [0.5028, 0.2283, 0.5631, 0.3717], shape: "rect" },
+      { name: "324", coords: [0.1505, 0.0383, 0.2093, 0.1983], shape: "rect" },
+      { name: "325", coords: [0.0897, 0.0333, 0.1477, 0.1933], shape: "rect" },
+      { name: "330", coords: [0.0327, 0.2583, 0.0897, 0.3733], shape: "rect" },
+      { name: "331", coords: [0.0308, 0.3783, 0.0897, 0.4883], shape: "rect" },
+      { name: "332", coords: [0.0271, 0.4883, 0.0897, 0.6017], shape: "rect" },
+      { name: "333", coords: [0.0271, 0.6033, 0.0897, 0.7133], shape: "rect" },
+      { name: "334", coords: [0.0271, 0.7183, 0.0870, 0.8283], shape: "rect" },
+      { name: "335", coords: [0.0243, 0.8283, 0.0859, 0.9517], shape: "rect" },
+      { name: "336", coords: [0.1093, 0.4817, 0.1811, 0.6367], shape: "rect" },
+      { name: "323", coords: [0.1131, 0.8367, 0.1704, 0.9883], shape: "rect" },
+      { name: "326", coords: [0.2019, 0.8367, 0.2626, 0.9400], shape: "rect" }
+    ],    
+    "4": [
+      { name: "430", coords: [0.0383, 0.2683, 0.1009, 0.3867], shape: "rect" },
+      { name: "431", coords: [0.0383, 0.3883, 0.1028, 0.4983], shape: "rect" },
+      { name: "432", coords: [0.0383, 0.5017, 0.1028, 0.6083], shape: "rect" },
+      { name: "433", coords: [0.0383, 0.6117, 0.1028, 0.7217], shape: "rect" },
+      { name: "434", coords: [0.0383, 0.7283, 0.1028, 0.8333], shape: "rect" },
+      { name: "435", coords: [0.0383, 0.8383, 0.1028, 0.9517], shape: "rect" },
+      { name: "427", coords: [0.2206, 0.4967, 0.2850, 0.6133], shape: "rect" },
+      { name: "428", coords: [0.2206, 0.3833, 0.2827, 0.4933], shape: "rect" },
+      { name: "429", coords: [0.2187, 0.2633, 0.2827, 0.3833], shape: "rect" },
+      { name: "426", coords: [0.0972, 0.0467, 0.1589, 0.1983], shape: "rect" },
+      { name: "425", coords: [0.1589, 0.0433, 0.2206, 0.2017], shape: "rect" },
+      { name: "419", coords: [0.6393, 0.0333, 0.7009, 0.1883], shape: "rect" },
+      { name: "420", coords: [0.5806, 0.0367, 0.6393, 0.1933], shape: "rect" },
+      { name: "421", coords: [0.5196, 0.0383, 0.5766, 0.1933], shape: "rect" },
+      { name: "422", coords: [0.4598, 0.0417, 0.5196, 0.1917], shape: "rect" },
+      { name: "415", coords: [0.6411, 0.2333, 0.7037, 0.3733], shape: "rect" },
+      { name: "416", coords: [0.5785, 0.2333, 0.6393, 0.3817], shape: "rect" },
+      { name: "417", coords: [0.5215, 0.2367, 0.5766, 0.3833], shape: "rect" },
+      { name: "418", coords: [0.4604, 0.2383, 0.5196, 0.3783], shape: "rect" }
+    ],
+    "5": [
+      { name: "523", coords: [0.0327, 0.2617, 0.0897, 0.3750], shape: "rect" },
+      { name: "524", coords: [0.0299, 0.3767, 0.0897, 0.4867], shape: "rect" },
+      { name: "525", coords: [0.0271, 0.4917, 0.0897, 0.6000], shape: "rect" },
+      { name: "515", coords: [0.1121, 0.8317, 0.1701, 0.9800], shape: "rect" },
+      { name: "520", coords: [0.2037, 0.4917, 0.2645, 0.6000], shape: "rect" },
+      { name: "521", coords: [0.2037, 0.3717, 0.2654, 0.4867], shape: "rect" },
+      { name: "522", coords: [0.2047, 0.2583, 0.2678, 0.3733], shape: "rect" },
+      { name: "502", coords: [0.6226, 0.0283, 0.6775, 0.1833], shape: "rect" },
+      { name: "503", coords: [0.5603, 0.0283, 0.6192, 0.1867], shape: "rect" },
+      { name: "507", coords: [0.4430, 0.2317, 0.5000, 0.3733], shape: "rect" },
+      { name: "508", coords: [0.5028, 0.2267, 0.5603, 0.3767], shape: "rect" },
+      { name: "509", coords: [0.5631, 0.2233, 0.6192, 0.3717], shape: "rect" },
+      { name: "510", coords: [0.6226, 0.2217, 0.6839, 0.3717], shape: "rect" }
+    ],
+    "6": [
+      { name: "612", coords: ["0.2289", "0.4000", "0.2900", "0.5017"], shape: "rect" },
+      { name: "613", coords: ["0.2289", "0.2882", "0.2900", "0.3950"], shape: "rect" },
+      { name: "607", coords: ["0.2300", "0.0780", "0.2951", "0.2282"], shape: "rect" },
+      { name: "608", coords: ["0.1700", "0.0802", "0.2300", "0.2282"], shape: "rect" },
+      { name: "609", coords: ["0.1050", "0.0780", "0.1679", "0.2282"], shape: "rect" },
+      { name: "615", coords: ["0.0477", "0.2912", "0.1112", "0.3967"], shape: "rect" },
+      { name: "616", coords: ["0.0458", "0.3950", "0.1112", "0.4950"], shape: "rect" },
+      { name: "617", coords: ["0.0458", "0.5017", "0.1112", "0.6017"], shape: "rect" },
+      { name: "618", coords: ["0.0477", "0.6050", "0.1112", "0.7050"], shape: "rect" },
+      { name: "619", coords: ["0.0495", "0.7100", "0.1112", "0.8150"], shape: "rect" },
+    ],
   },
 
   반도체대학: {
@@ -1335,44 +1558,142 @@ const classroomCoordinates = {
   },
 };
 
-// 임시 강의 데이터 (실제로는 데베 연결)
-const lectureInfo = {
-}
 
 
 function FloorPage() {
-  const { building = "비전타워", floor = "1" } = useParams();
+  const { building: initialBuilding = "비전타워", floor: initialFloor = "1" } = useParams();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [currentLecture, setCurrentLecture] = useState({});
+  const [buildingList, setBuildingList] = useState([]);
+  const [floorList, setFloorList] = useState([]);
+  const [currentBuilding, setCurrentBuilding] = useState(initialBuilding);
+  const [currentFloor, setCurrentFloor] = useState(initialFloor);
 
-  function handleBuildingClick(building) {
-    navigate(`/building/${building}/1`);
+  function handleBuildingClick(clickedBuilding) {
+    setCurrentBuilding(clickedBuilding);
+    navigate(`/building/${clickedBuilding}/1`); // 기본적으로 1층으로 이동
   }
 
-  function handleFloorClick(floor) {
-    navigate(`/building/${building}/${floor}`);
+  function handleFloorClick(clickedFloor) {
+    setCurrentFloor(clickedFloor);
+    navigate(`/building/${currentBuilding}/${clickedFloor}`);
   }
 
-  const floorImage = floorPlans[building]?.[floor] || floorPlans["비전타워"][1]; // 기본값은 비전타워 1층
+  const floorImage = floorPlans[currentBuilding]?.[currentFloor] || floorPlans["비전타워"]["1"]; // 기본값은 비전타워 1층
   const currentFloorClassrooms = useMemo(() => {
-    return classroomCoordinates[building]?.[floor] || [];
-  }, [building, floor]);
+    return classroomCoordinates[currentBuilding]?.[currentFloor] || [];
+  }, [currentBuilding, currentFloor]);
 
-  // currentBuildingLectures를 useMemo로 메모이제이션
-  const currentBuildingLectures = useMemo(() => lectureInfo[building] || {}, [building]);
-
-  const openModal = useCallback((classroomName, event) => {
-    const x =  event.pageX + 20;
-    const y = event.pageY - 90;
-
-    setModalPosition({ x, y });
+  const getCurrentPeriod = () => {
+    // const now = new Date();
+    // const hour = now.getHours();
+    // const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+    // const day = dayNames[now.getDay()];
+  
+    // // 교시 시간대 (예: 9시~10시 -> 1교시)
+    // const periods = [
+    //   { start: 9, end: 10, period: "1" },
+    //   { start: 10, end: 11, period: "2" },
+    //   { start: 11, end: 12, period: "3" },
+    //   { start: 12, end: 13, period: "4" },
+    //   { start: 13, end: 14, period: "5" },
+    //   { start: 14, end: 15, period: "6" },
+    //   { start: 15, end: 16, period: "7" },
+    //   { start: 16, end: 17, period: "8" },
+    //   { start: 17, end: 18, period: "9" },
+    //   { start: 18, end: 19, period: "10" },
+    //   { start: 19, end: 20, period: "11" },
+    //   { start: 20, end: 21, period: "12" },
+    //   { start: 21, end: 22, period: "13" },
+    //   { start: 22, end: 23, period: "14" },
+    // ];
+  
+    // const currentPeriod = periods.find(p => hour >= p.start && hour < p.end);
+    // if (currentPeriod) {
+    //   return ${day}${currentPeriod.period}; // 예: "수3"
+    // }
+    return "금5"; // 현재 시간이 교시 범위가 아닐 경우
+  };
+  
+  const openModal = useCallback(async (classroomName, event) => {
+    console.log("openModal 호출됨", classroomName, event);
+    const x = (event.clientX / window.innerWidth) * 100;
+    const y = (event.clientY / window.innerHeight) * 100;
+  
+    const offsetX = 15 / 2;
+    const offsetY = 15 / 2;
+  
+    const calculatedX = Math.min(Math.max(x - offsetX, 5), 95 - 15 + offsetX);
+    const calculatedY = Math.min(Math.max(y - offsetY, 5), 95 - 15 + offsetY);
+  
+    setModalPosition({ x: calculatedX, y: calculatedY });
     setSelectedRoom(classroomName);
-    setCurrentLecture(currentBuildingLectures[classroomName] || {});
+    setCurrentLecture({});
     setIsModalOpen(true);
-  }, [currentBuildingLectures]);  // currentBuildingLectures를 의존성 배열에 추가
+  
+    const currentSlot = getCurrentPeriod();
+    console.log("getCurrentPeriod 결과:", currentSlot);
+  
+    if (!currentSlot) {
+      setCurrentLecture({
+        title: "현재 교시가 아니거나 수업이 없습니다.",
+        professor: "",
+        schedule: "",
+      });
+      return;
+    }
+  
+    try {
+      const response = await axios.get(
+        `http://110.15.135.250:8000/building-service/admin/classes/detail?buildingName=${currentBuilding}&floor=${currentFloor}&pageNum=0&pageSize=40`,
+        {
+          headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const classList = response.data?.data || [];
+      console.log("클래스 리스트:", classList);
+  
+      const currentClass = classList.find((classInfo) => {
+        const buildingName = (classInfo.buildingName || "").trim();
+        const roomName = (classInfo.roomName || "").trim();
+        const courseTimes = (classInfo.courseTime || "")
+          .split(",")
+          .map((time) => time.trim());
+  
+        return (
+          buildingName === currentBuilding.trim() &&
+          roomName === classroomName.trim() &&
+          courseTimes.includes(currentSlot)
+        );
+      });
+  
+      if (currentClass) {
+        setCurrentLecture(currentClass);
+        console.log("수업 있음:", currentClass);
+      } else {
+        setCurrentLecture({
+          title: "현재 진행 중인 강의가 없습니다.",
+          professor: "",
+          schedule: "",
+        });
+        console.log("수업 없음 처리");
+      }
+    } catch (err) {
+      console.error("강의 조회 실패", err);
+      setCurrentLecture({
+        title: "강의 정보를 불러오는 데 실패했습니다.",
+        professor: "",
+        schedule: "",
+      });
+    }
+  }, [currentBuilding]);  
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
@@ -1396,12 +1717,12 @@ function FloorPage() {
   // 이미지 리사이즈 및 좌표 업데이트
   useEffect(() => {
     const updateCoords = () => {
-      const img = document.querySelector(`img[usemap="#floorMap-${building}-${floor}"]`);
+      const img = document.querySelector(`img[usemap="#floorMap-${currentBuilding}-${currentFloor}"]`);
       if (!img) return;
       const width = img.clientWidth;
       const height = img.clientHeight;
 
-      const areas = document.querySelectorAll(`map[name="floorMap-${building}-${floor}"] area`);
+      const areas = document.querySelectorAll(`map[name="floorMap-${currentBuilding}-${currentFloor}"] area`);
       areas.forEach(area => {
         try {
           const rawData = area.dataset.coords;
@@ -1423,7 +1744,44 @@ function FloorPage() {
     updateCoords();
     window.addEventListener("resize", updateCoords);
     return () => window.removeEventListener("resize", updateCoords);
-  }, [building, floor, currentFloorClassrooms]);
+  }, [currentBuilding, currentFloor, currentFloorClassrooms]);
+
+  useEffect(() => {
+    axios.get("http://110.15.135.250:8000/building-service/member/building", {
+      headers: {
+        'Authorization': "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+              "Content-Type": "application/json",
+      },
+    })
+    .then((res) => {
+      console.log("건물 목록 API 응답:", res.data);
+      setBuildingList(res.data.data || []); // API에서 받아온 건물 리스트 설정
+      console.log("buildingList 상태:", buildingList);
+    })
+    .catch((error) => {
+      console.error("건물 목록을 불러오는 데 실패했습니다:", error);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (currentBuilding) {
+      axios.get(`http://110.15.135.250:8000/building-service/member/building/${currentBuilding}`, {
+        headers: {
+          'Authorization': "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(`${currentBuilding} 층 목록 API 응답:`, res.data);
+        setFloorList(res.data?.data?.floors || []);
+        console.log("floorList 상태:", floorList);
+      })
+      .catch((error) => {
+        console.error(`${currentBuilding}의 층 정보를 불러오는 데 실패했습니다:`, error);
+        setFloorList([]);
+      });
+    }
+  }, [currentBuilding]);
 
   return (
     <div>
@@ -1431,18 +1789,18 @@ function FloorPage() {
       <div className={styles.bg} />
       <div className={styles.content}>
         <div className={styles.titleBox}>
-          <h2 className={styles.title}>{building} {floor}층</h2>
+          <h2 className={styles.title}>{currentBuilding} {currentFloor}층</h2>
         </div>
 
         <div className={styles.mainContainer}>
           <img
             src={floorImage}
-            alt={`${building} ${floor}층`}
+            alt={`${currentBuilding} ${currentFloor}층`}
             className={styles.floorImage}
-            useMap={`#floorMap-${building}-${floor}`}
+            useMap={`#floorMap-${currentBuilding}-${currentFloor}`}
           />
-          <map name={`floorMap-${building}-${floor}`}>
-            {currentFloorClassrooms.map((classroom, index) => (
+          <map name={`floorMap-${currentBuilding}-${currentFloor}`}>
+            {(currentFloorClassrooms || []).map((classroom, index) => (
               <area
                 key={index}
                 shape={classroom.shape}
@@ -1455,13 +1813,14 @@ function FloorPage() {
             ))}
           </map>
 
-          <div className={styles.floorList}>
+          <div className={styles.floorList}
+          style={{ marginTop: floorList.length > 11 ? '-11vh' : '-9vh' }}>
             <ul>
-              {Object.keys(floorPlans[building] || {}).map((fl) => (
+              {(floorList || []).map((fl) => (
                 <li
                   key={fl}
                   onClick={() => handleFloorClick(fl)}
-                  className={fl === floor ? `${styles.floorItem} ${styles.active}` : styles.floorItem}
+                  className={fl === currentFloor ? `${styles.floorItem} ${styles.active}` : styles.floorItem}
                 >
                   {fl}
                 </li>
@@ -1471,11 +1830,11 @@ function FloorPage() {
 
           <div className={styles.buildingList}>
             <ul>
-              {buildings.map((bld, index) => (
+              {(buildingList || []).map((bld) => (
                 <li
-                  key={index}
+                  key={bld}
                   onClick={() => handleBuildingClick(bld)}
-                  className={bld === building ? `${styles.buildingItem} ${styles.active}` : styles.buildingItem}
+                  className={bld === currentBuilding ? `${styles.buildingItem} ${styles.active}` : styles.buildingItem}
                 >
                   {bld}
                 </li>
@@ -1487,11 +1846,11 @@ function FloorPage() {
 
       {isModalOpen && selectedRoom && currentLecture && (
         <LectureModal
-          building={building}
+          building={currentBuilding}
           room={selectedRoom}
           lectureData={currentLecture}
           position={modalPosition}
-          styles={modalStyles} 
+          styles={modalStyles}
         />
       )}
     </div>
