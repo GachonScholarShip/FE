@@ -12,50 +12,50 @@
 
 .loginBox {
   position: absolute;
-  top: 141px;
-  left: 950px;
-  width: 450px;
+  top: 15vh;
+  left: 56vw;
+  width: 26vw;
   height: auto;
   background: rgba(255, 255, 255, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 2vh;
 }
 
 /* 1280px 이하 화면 크기 */
-@media (max-width: 1280px) {
+/* @media (max-width: 1280px) {
   .loginBox {
     top: 171px;
     left: 740px;
     width: 393px;
     height: auto;
   }
-}
+} */
 
 /* 768px 이하 화면 크기 */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .loginBox {
     width: 350px;
     height: 350px;
     top: 251px;
     left: 22px;
   }
-}
+} */
 
 /* 작은 화면 크기 */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .loginBox {
     width: 90%;
     height: auto;
     top: 200px;
     left: 5%;
   }
-}
+} */
 
 .title {
-  font-size: 32px;
+  font-size: 1.9vw;
   text-align: center;
   color: #014f99;
   margin-bottom: 20px;
@@ -66,7 +66,7 @@
   padding: 12px;
   margin: 10px 0;
   border: 1px solid #ccc;
-  font-size: 16px;
+  font-size: 0.95vw;
 }
 
 .loginButton {
@@ -74,7 +74,7 @@
   padding: 12px;
   background: #014f99;
   color: white;
-  font-size: 18px;
+  font-size: 1.05vw;
   font-weight: bold;
   border: none;
   cursor: pointer;
@@ -87,7 +87,7 @@
 
 .idpassword {
   color: #014f99;
-  font-size: 16px;
+  font-size: 0.9vw;
   width: 80%;
   text-align: left;
   font-weight: bold;
@@ -97,7 +97,7 @@
   margin-top: 30px;
   color: #014f99;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.85vw;
   width: 80%;
   text-align: right;
 }

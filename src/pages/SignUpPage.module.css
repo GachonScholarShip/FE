@@ -12,16 +12,16 @@
 
 .signupBox {
   position: absolute;
-  top: 70px;
-  left: 950px;
-  width: 450px;
+  top: 7.4vh;
+  left: 56vw;
+  width: 26.5vw;
   height: auto;
   background: rgba(255, 255, 255, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 2vh;
 }
 
 .inputGroup {
@@ -31,11 +31,12 @@
 }
 
 .checkButton {
-  width: 81px;
-  margin-left: 10px;
-  padding: 10px;
+  width: 4.8vw;
+  margin-left: 0.75vh;
+  padding: 1vh;
   background: #014f99;
   color: white;
+  font-size: 0.78vw;
   border: none;
   cursor: pointer;
 }
@@ -46,75 +47,76 @@
 
 .genderGroup {
   width: 80%;
+  font-size: 0.85vw;
 }
 
 .gender {
-  margin-right: 10px;
+  margin-right: 1vh;
 }
 
 /* 1280px 이하 화면 크기 */
-@media (max-width: 1280px) {
+/* @media (max-width: 1280px) {
   .signupBox {
     top: 80px;
     left: 740px;
     width: 393px;
     height: auto;
   }
-}
+} */
 
 /* 768px 이하 화면 크기 */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .signupBox {
     width: 350px;
     height: auto;
     top: 251px;
     left: 22px;
   }
-}
+} */
 
 /*작은 화면 크기 */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .signupBox {
     width: 90%;
     height: auto;
     top: 130px;
     left: 5%;
   }
-}
+} */
 
 .title {
-  font-size: 20px;
+  font-size: 1.18vw;
   text-align: center;
   color: #014f99;
-  margin-bottom: 20px;
+  margin-bottom: 2.1vh;
 }
 
 .input {
   width: 80%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 2px solid #014f99;
-  font-size: 10px;
+  padding: 0.7vw;
+  margin: 0.85vh 0vw;
+  border: 0.27vh solid #014f99;
+  font-size: 0.59vw;
 }
 
 .input2 {
   width: 80%;
-  padding: 12px;
-  margin: -3px 0 10px;
-  border: 2px solid #014f99;
-  font-size: 10px;
+  padding: 1.26vh;
+  margin: -0.3vh 0vh 1.2vh;
+  border: 0.27vh solid #014f99;
+  font-size: 0.59vw;
 }
 
 .signupButton {
   width: 80%;
-  padding: 12px;
+  padding: 1.3vh;
   background: #014f99;
   color: white;
-  font-size: 12px;
+  font-size: 0.7vw;
   font-weight: bold;
   border: none;
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 1.5vh;
 }
 
 .signupButton:hover {
@@ -124,7 +126,7 @@
 .idpassword {
   font-weight: bold;
   color: #014f99;
-  font-size: 12px;
+  font-size: 0.7vw;
   width: 80%;
   text-align: left;
 }
@@ -133,7 +135,7 @@
   margin-top: 30px;
   color: #014f99;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.8vh;
   width: 80%;
   text-align: right;
 }
