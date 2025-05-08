@@ -29,22 +29,28 @@
   justify-content: center;
   align-items: flex-start;
   width: 100%;
+  flex-wrap: wrap;
+  padding: 2vh 2vw;
+  box-sizing: border-box;
 }
 
 .roadviewContent {
-  width: 60%;
+  width: 50vw;
   max-width: 900px;
-  height: 650px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  aspect-ratio: 1200 / 860;
+  margin-left: -3vw;
+  margin-top: 3vh;
+  border-radius: 1vw;
+  box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2);
 }
+
 .qrBox {
-  width: 40%;
-  max-width: 300px;
-  height: 500px;
-  border-radius: 50px;
-  margin-left: 40px;
-  margin-top: 50px;
+  width: 18vw;             /* 화면 너비의 40% */
+  max-width: 80vw;         /* 너무 커지는 것 방지 */
+  border-radius: 3vw;      /* 둥글기 반응형 */
+  margin-left: 3vw;        /* 왼쪽 여백 반응형 */
+  margin-top: 4vh;         /* 위쪽 여백 반응형 */
+  aspect-ratio: 100 / 180;
   background-color: rgba(1, 79, 153, 0.4);
   display: flex;
   flex-direction: column;
@@ -55,15 +61,16 @@
 }
 
 .qr {
-  width: 95px;
-  height: 95px;
-  margin-bottom: 45px;
+  width: 90%;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-top: 15vh;
 }
 
 .qrText {
   text-align: center;
   font-weight: bold;
-  margin-top: 20px;
-  font-size: 25px;
+  margin-top: 2vh;
+  font-size: 1.5vw;
   color: #014f99;
 }

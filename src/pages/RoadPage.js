@@ -46,7 +46,7 @@ const buildings = [
 const classBuildings = [
   "가천관", "공과대학2", "한의과대학", "바이오나노연구원",
   "법과대학", "비전타워", "반도체대학", "글로벌센터", "공과대학1", "바이오나노대학",
-  "예술.체육대학2", "예술.체육대학1", "교육대학원", "AI공학관"
+  "예술.체육대학2", "예술.체육대학1", "교육대학원"
 ];
 
 const etc = [
@@ -69,7 +69,7 @@ function RoadPage() {
     setSelectedBuilding(buildingName);
     setShowFloorButton(classBuildings?.includes(buildingName) || false);
     setModalVisible(true);
-  }, [classBuildings]); // classBuildings는 useCallback 외부 스코프에서 정의되었으므로 dependency array에서 제거
+  }, []); // classBuildings는 useCallback 외부 스코프에서 정의되었으므로 dependency array에서 제거
 
   const closeModal = useCallback(() => {
     setModalVisible(false);
@@ -78,7 +78,11 @@ function RoadPage() {
   }, [setModalVisible, setSelectedBuilding, setShowFloorButton]);
 
   const handleNavigation = (path) => {
-    navigate(path);
+    if ((path === "/ar" || path === "/map") && selectedBuilding) {
+      navigate(path, { state: { selectedBuilding: selectedBuilding } });
+    } else {
+      navigate(path);
+    }
   };
 
   useEffect(() => {
@@ -92,7 +96,7 @@ function RoadPage() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [modalVisible, closeModal]); // styles.modal은 useEffect 외부 스코프에서 정의되었으므로 dependency array에서 제거
+  }, [modalVisible, closeModal, styles.modal]); // styles.modal을 의존성 배열에 추가
 
   useEffect(() => {
     const img = mapImageRef.current;
@@ -136,7 +140,7 @@ function RoadPage() {
       }
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [buildingCoords]);
 
   return (
     <div>

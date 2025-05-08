@@ -1,72 +1,87 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import styles from "./ARViewPage.module.css";
 
 function ARViewPage() {
   const location = useLocation();
-  const { selectedBuilding } = location.state || {}; // 전달된 selectedBuilding 정보 받기
-  const [roadview, setRoadview] = useState(null);
+  const { selectedBuilding } = location.state || {};
+  const [roadviewUrl, setRoadviewUrl] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   useEffect(() => {
     if (!selectedBuilding) return;
 
-    const loadNaverMapScript = () => {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID`;
-      script.async = true;
-      script.onload = () => initializeRoadview(); // API 로드 후 로드뷰 초기화
-      document.head.appendChild(script);
-    };
-
-    const initializeRoadview = () => {
-      const roadviewOptions = {
-        position: new window.naver.maps.LatLng(37.5665, 126.978), // 기본 위치 (서울 중심)
-      };
-
-      const naverRoadview = new window.naver.maps.Roadview(
-        "roadview",
-        roadviewOptions
-      );
-      setRoadview(naverRoadview);
-
-      // 선택된 건물에 맞는 좌표로 수정 필요
-      let buildingLocation = new window.naver.maps.LatLng(37.57, 126.985); // 기본 위치
-
-      // 선택된 건물에 맞는 좌표 설정
-      if (selectedBuilding === "가천관") {
-        buildingLocation = new window.naver.maps.LatLng(37.5665, 126.978); // 가천관의 실제 좌표
-      }
-
-      // 로드뷰의 위치를 선택된 건물 위치로 설정
-      naverRoadview.setPosition(buildingLocation);
-    };
-
-    loadNaverMapScript();
-
-    // 클린업: 컴포넌트가 언마운트될 때 스크립트 제거
-    return () => {
-      const script = document.querySelector(
-        'script[src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID"]'
-      );
-      if (script) {
-        script.remove();
+    const fetchRoadviewData = async () => {
+      try {
+        const response = await axios.get(
+          `http://110.15.135.250:8000/movement-service/member/road_view/${selectedBuilding}`,
+          {
+            headers: {
+              Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setRoadviewUrl(response.data.data.url);
+      } catch (error) {
+        console.error("로드뷰 불러오기 실패:", error);
       }
     };
+
+    const fetchQrCode = async () => {
+      try {
+        const response = await axios.get(
+          `http://110.15.135.250:8000/movement-service/member/qrcode/${selectedBuilding}`,
+          {
+            headers: {
+              Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+              "Content-Type": "application/json",
+            },
+        }
+      );
+      // API 응답에서 imageUrl을 직접 받아와 상태에 할당
+      setQrCodeUrl(response.data.data.imageUrl);
+    } catch (error) {
+      console.error("QR 코드 불러오기 실패:", error);
+    }
+  };
+
+    fetchRoadviewData();
+    fetchQrCode();
   }, [selectedBuilding]);
 
+  
   return (
     <div>
       <NavBar />
       <div className={styles.bg} />
       <div className={styles.content}>
-        {/* 로드뷰 div */}
-        <div id="roadview" className={styles.roadviewContent}></div>
+        {/* 로드뷰 표시 */}
+        {roadviewUrl ? (
+          <iframe
+            src={roadviewUrl}
+            title="로드뷰"
+            className={styles.roadviewContent}
+            allowFullScreen
+          />
+        ) : (
+          <div className={styles.roadviewContent}>로드뷰를 불러오는 중입니다...</div>
+        )}
 
+        {/* QR 코드 박스 */}
         <div className={styles.qrBox}>
           <span className={styles.qrText}>휴대폰으로 보기</span>
-          {/* <img src={qrIcon} alt="Qr" className={styles.icon} /> */}
+          {qrCodeUrl && (
+            <img src={qrCodeUrl} alt="Qr 코드" className={styles.qr} />
+          )}
+          {!qrCodeUrl && selectedBuilding && (
+            <div className={styles.loading}>QR 코드 불러오는 중...</div>
+          )}
+          {!qrCodeUrl && !selectedBuilding && (
+            <div>건물 정보를 불러오는 중...</div>
+          )}
         </div>
       </div>
     </div>
