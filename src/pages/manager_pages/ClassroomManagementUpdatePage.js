@@ -1,68 +1,154 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SearchBar from "../../components/SearchBar";
 import SaveButton from "../../components/SaveButton";
 import styles from "./ClassroomManagementUpdatePage.module.css";
+import axios from "axios";
 
 function ClassroomManagementUpdatePage() {
   const location = useLocation();
-  const { roomName, courseName, professor, time, building, floor } =
-    location.state || {};
+  const navigate = useNavigate();
+  const {
+    id,
+    roomName,
+    title,
+    professor,
+    courseTime,
+    buildingName,
+    floor,
+    code,
+    grade,
+    major,
+  } = location.state;
 
-  const [selectedBuilding, setSelectedBuilding] = useState(building || "");
+  const [selectedBuilding, setSelectedBuilding] = useState(buildingName || "");
   const [selectedFloor, setSelectedFloor] = useState(floor || "");
+  const [buildingFloorsMap, setBuildingFloorsMap] = useState({});
+  const [formData, setFormData] = useState({
+    id: id,
+    roomName: roomName,
+    title: title,
+    professor: professor,
+    courseTime: courseTime,
+    buildingName: buildingName,
+    floor: floor,
+    code: code,
+    grade: grade,
+    major: major,
+  });
 
-  const buildingFloors = {
-    가천관: [
-      "B2",
-      "B1",
-      "1F",
-      "2F",
-      "3F",
-      "4F",
-      "5F",
-      "6F",
-      "7F",
-      "8F",
-      "9F",
-      "10F",
-      "11F",
-      "12F",
-    ],
-    공과대학1: ["B1", "1F", "2F", "3F", "4F", "5F", "6F", "7F"],
-    공과대학2: ["1F", "2F", "3F", "4F", "5F", "6F"],
-    교육대학원: ["B2", "B1", "1F", "2F", "3F", "4F", "5F", "6F"],
-    글로벌센터: ["B1", "1F", "2F", "3F", "4F", "5F", "6F", "7F"],
-    바이오나노연구원: ["B1", "1F", "2F", "3F", "4F", "5F"],
-    바이오나노대학: ["1F", "2F", "3F", "4F", "5F"],
-    반도체대학: ["B3", "B2", "B1", "1F", "2F", "3F", "4F", "5F", "6F"],
-    법과대학: ["1F", "2F", "3F", "4F"],
-    비전타워: [
-      "B4",
-      "B3",
-      "B2",
-      "B1",
-      "1F",
-      "2F",
-      "3F",
-      "4F",
-      "5F",
-      "6F",
-      "7F",
-    ],
-    예술체육대학1: ["B1", "1F", "2F", "3F", "4F", "5F", "6F"],
-    예술체육대학2: ["B1", "1F", "2F", "3F", "4F"],
-    한의과대학: ["1F", "2F", "3F", "4F", "5F"],
+  useEffect(() => {
+    const fetchBuildings = async () => {
+      try {
+        const response = await axios.get(
+          "http://110.15.135.250:8000/building-service/admin/building",
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTEzMjUsImV4cCI6MTc1NDA1MTMyNX0.V0RNqeCd4j7XznWD6c5x1wVhf4QNwoXGKhgWa2C5rJs`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const map = {};
+        response.data.data.forEach((building) => {
+          map[building.buildingName] = building.floors
+            .map((floor) => {
+              if (floor.startsWith("B")) return floor;
+              if (floor === "0") return null;
+              return `${floor}F`;
+            })
+            .filter(Boolean);
+        });
+
+        setBuildingFloorsMap(map);
+      } catch (error) {
+        console.error("건물 정보 로딩 실패:", error);
+      }
+    };
+
+    fetchBuildings();
+  }, []);
+
+  useEffect(() => {
+    if (selectedBuilding && buildingFloorsMap[selectedBuilding]) {
+      if (floor && buildingFloorsMap[selectedBuilding].includes(`${floor}F`)) {
+        setSelectedFloor(`${floor}F`);
+      }
+    }
+  }, [selectedBuilding, buildingFloorsMap, floor]);
+
+  const extractTimeSlot = (courseTimeStr) => {
+    if (!courseTimeStr) return "";
+    const parts = courseTimeStr.split(",").map((s) => s.trim());
+    return parts[parts.length - 1];
   };
 
-  const handleBuildingChange = (e) => {
-    setSelectedBuilding(e.target.value);
-    setSelectedFloor("");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (name === "buildingName") {
+      setSelectedBuilding(value);
+      setFormData((prev) => ({ ...prev, buildingName: value }));
+    }
+    if (name === "floor") {
+      setSelectedFloor(value);
+      setFormData((prev) => ({ ...prev, floor: value }));
+    }
   };
+  const handleSave = async () => {
+    if (!formData.id) {
+      alert("강의실 ID가 없습니다. 수정할 수 없습니다.");
+      return;
+    }
 
-  const handleFloorChange = (e) => {
-    setSelectedFloor(e.target.value);
+    try {
+      const numericFloor =
+        selectedFloor && !selectedFloor.startsWith("B") && selectedFloor !== ""
+          ? selectedFloor.replace("F", "")
+          : selectedFloor;
+
+      const payload = {
+        id: formData.id,
+        code: formData.code,
+        title: formData.title,
+        grade: formData.grade,
+        major: formData.major,
+        professor: formData.professor,
+        courseTime: formData.courseTime,
+        buildingName: selectedBuilding,
+        timeSlot: extractTimeSlot(formData.courseTime),
+        roomName: formData.roomName,
+        floor: Number(numericFloor), // 숫자 변환
+      };
+      console.log("전송할 payload", payload);
+
+      const response = await axios.patch(
+        `http://110.15.135.250:8000/building-service/admin/classes/${formData.id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTEzMjUsImV4cCI6MTc1NDA1MTMyNX0.V0RNqeCd4j7XznWD6c5x1wVhf4QNwoXGKhgWa2C5rJs`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("resonse.data", response.data);
+      console.log("response", response);
+      if (response.data.code === 200) {
+        alert("강의실 수정 성공!");
+        navigate(`/cm`);
+      } else {
+        alert("수정 실패: " + response.data.message);
+      }
+    } catch (err) {
+      console.error("PATCH 실패:", err);
+      alert("수정 실패: " + (err.response?.data?.message || "서버 오류"));
+    }
   };
 
   return (
@@ -82,16 +168,18 @@ function ClassroomManagementUpdatePage() {
                   <label>강의실</label>
                   <input
                     type="text"
-                    placeholder="강의실을 입력해주세요"
-                    defaultValue={roomName}
+                    name="roomName"
+                    value={formData.roomName}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label>강의명</label>
                   <input
                     type="text"
-                    placeholder="강의명을 입력해주세요"
-                    defaultValue={courseName}
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -101,16 +189,18 @@ function ClassroomManagementUpdatePage() {
                   <label>교수</label>
                   <input
                     type="text"
-                    placeholder="교수명을 입력해주세요"
-                    defaultValue={professor}
+                    name="professor"
+                    value={formData.professor}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label>시간</label>
                   <input
                     type="text"
-                    placeholder="시간을 입력해주세요"
-                    defaultValue={time}
+                    name="courseTime"
+                    value={formData.courseTime}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -119,12 +209,13 @@ function ClassroomManagementUpdatePage() {
                 <div className={styles.formGroup}>
                   <label>건물명</label>
                   <select
-                    value={selectedBuilding}
-                    onChange={handleBuildingChange}
                     className={styles.select}
+                    name="buildingName"
+                    value={selectedBuilding}
+                    onChange={handleChange}
                   >
                     <option value="">건물을 선택해주세요</option>
-                    {Object.keys(buildingFloors).map((building) => (
+                    {Object.keys(buildingFloorsMap).map((building) => (
                       <option key={building} value={building}>
                         {building}
                       </option>
@@ -134,24 +225,58 @@ function ClassroomManagementUpdatePage() {
                 <div className={styles.formGroup}>
                   <label>층</label>
                   <select
-                    value={selectedFloor}
-                    onChange={handleFloorChange}
                     className={styles.select}
+                    name="floor"
+                    value={selectedFloor}
+                    onChange={handleChange}
                     disabled={!selectedBuilding}
                   >
-                    <option value="">층 수를 선택해주세요</option>
-                    {selectedBuilding &&
-                      buildingFloors[selectedBuilding]?.map((floor) => (
-                        <option key={floor} value={floor}>
-                          {floor}
-                        </option>
-                      ))}
+                    <option value="">층을 선택해주세요</option>
+                    {buildingFloorsMap[selectedBuilding]?.map((fl) => (
+                      <option key={fl} value={fl}>
+                        {fl}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>코드</label>
+                  <input
+                    type="text"
+                    placeholder="코드를 입력해주세요"
+                    value={formData.code}
+                    readOnly
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>학년</label>
+                  <input
+                    type="text"
+                    placeholder="학년을 입력해주세요"
+                    value={formData.grade}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>전공</label>
+                  <input
+                    type="text"
+                    placeholder="전공을 입력해주세요"
+                    value={formData.major}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formGroup}></div>
+              </div>
             </div>
+
             <div className={styles.savebuttonContainer}>
-              <SaveButton />
+              <SaveButton onClick={handleSave} />
             </div>
           </div>
         </div>

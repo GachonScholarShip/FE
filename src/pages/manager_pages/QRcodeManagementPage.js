@@ -7,23 +7,23 @@ import AddButton from "../../components/AddButton";
 import DeleteButton from "../../components/DeleteButton";
 import UpdateButton from "../../components/UpdateButton";
 import DeleteConfirmPopup from "../../components/DeleteConfirmPopup";
-import styles from "./RoadviewManagementPage.module.css";
+import styles from "./QRcodeManagementPage.module.css";
 
-function RoadviewManagementPage() {
+function QRcodeManagementPage() {
   const navigate = useNavigate();
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [selectedDestination, setSelectedDestination] = useState(null);
-  const [destinations, setDestinations] = useState([]);
+  const [selectedQR, setSelectedQR] = useState(null);
+  const [qrCodes, setQrCodes] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pageSize = 10;
+  const pageSize = 4;
 
   useEffect(() => {
-    const fetchDestinations = async () => {
+    const fetchQRCodes = async () => {
       try {
         const response = await axios.get(
-          "http://110.15.135.250:8000/movement-service/member/road_view?pageNum=0&pageSize=1000",
+          "http://110.15.135.250:8000/movement-service/admin/qrcode",
           {
             headers: {
               Authorization:
@@ -34,32 +34,25 @@ function RoadviewManagementPage() {
         );
 
         const data = response.data.data;
-        const formatted = data.map((item) => ({
-          id: item.endPoint,
-          url: item.url,
-          baseId: item.roadViewId,
-          name: item.endPoint,
-        }));
-
-        setDestinations(formatted);
+        setQrCodes(data || []);
       } catch (error) {
-        console.error("목록 조회 실패:", error);
+        console.error("QR 코드 목록 조회 실패:", error);
       }
     };
 
-    fetchDestinations();
-  }, []);
+    fetchQRCodes();
+  }, [currentPage]);
 
-  const handleDeleteClick = (destination) => {
-    setSelectedDestination(destination);
+  const handleDeleteClick = (qr) => {
+    setSelectedQR(qr);
     setShowConfirm(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (selectedDestination) {
+    if (selectedQR) {
       try {
         await axios.delete(
-          `http://110.15.135.250:8000/movement-service/admin/road_view/${selectedDestination.baseId}`,
+          `http://110.15.135.250:8000/movement-service/admin/qrcode/${selectedQR.id}`,
           {
             headers: {
               Authorization:
@@ -69,47 +62,37 @@ function RoadviewManagementPage() {
           }
         );
 
-        setDestinations((prev) =>
-          prev.filter((d) => d.baseId !== selectedDestination.baseId)
-        );
+        setQrCodes((prev) => prev.filter((qr) => qr.id !== selectedQR.id));
         setShowConfirm(false);
-        setSelectedDestination(null);
+        setSelectedQR(null);
       } catch (error) {
-        console.error("삭제 실패:", error);
+        console.error("QR 코드 삭제 실패:", error);
       }
     }
   };
 
   const handleCancelDelete = () => {
     setShowConfirm(false);
-    setSelectedDestination(null);
+    setSelectedQR(null);
   };
 
-  const handleUpdateClick = (destination) => {
-    navigate(`/rvmu/${destination.baseId}`, {
+  const handleUpdateClick = (qr) => {
+    navigate(`/qrmu/${qr.id}`, {
       state: {
-        id: destination.id,
-        url: destination.url,
-        name: destination.name,
-        baseId: destination.baseId,
+        id: qr.id,
+        buildingName: qr.buildingName,
+        imageUrl: qr.imageUrl,
+        url: qr.url, // URL을 상태로 전달
       },
     });
   };
 
-  const totalPages = Math.ceil(destinations.length / pageSize);
-  const paginatedDestinations = destinations.slice(
+  // `totalPages`는 최소 1페이지가 나오도록 계산
+  const totalPages = Math.ceil(qrCodes.length / pageSize);
+  const paginatedQRCodes = qrCodes.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
   );
-
-  // URL 자르기 함수
-  const formatUrl = (url) => {
-    const maxLength = 50;
-    if (url.length > maxLength) {
-      return url.slice(0, maxLength) + "...";
-    }
-    return url;
-  };
 
   return (
     <div>
@@ -117,37 +100,42 @@ function RoadviewManagementPage() {
       <div className={styles.bg}>
         <div className={styles.container}>
           <div className={styles.Box}>
-            <div className={styles.title}>로드뷰 관리</div>
+            <div className={styles.title}>QR 코드 관리</div>
+
             <div className={styles.tableHeader}>
-              <div className={styles.column}>목적지</div>
-              <div className={styles.column}>
-                네이버 지도 URL(URL 단축 서비스 이용)
-              </div>
+              <div className={styles.column}>건물 이름</div>
+              <div className={styles.column}>QR 이미지</div>
+              <div className={styles.column}>URL</div>
               <div className={styles.column}></div>
             </div>
 
-            {paginatedDestinations.map((destination, index) => (
-              <div key={index} className={styles.tableRow}>
-                <div className={styles.column}>{destination.id}</div>
-                <div className={styles.column} title={destination.url}>
-                  {formatUrl(destination.url)}
+            {paginatedQRCodes.map((qr) => (
+              <div key={qr.id} className={styles.tableRow}>
+                <div className={styles.column}>{qr.buildingName}</div>
+                <div className={styles.column}>
+                  {/* 이미지 URL로 표시 */}
+                  <img
+                    src={qr.imageUrl}
+                    alt={qr.buildingName}
+                    className={styles.qrImage}
+                  />
+                </div>
+                <div className={styles.column}>
+                  {/* URL 표시 */}
+                  <span>{qr.imageUrl}</span> {/* URL 그대로 표시 */}
                 </div>
                 <div className={styles.column}>
                   <div className={styles.button}>
-                    <UpdateButton
-                      onClick={() => handleUpdateClick(destination)}
-                    />
-                    <DeleteButton
-                      onClick={() => handleDeleteClick(destination)}
-                    />
+                    <UpdateButton onClick={() => handleUpdateClick(qr)} />
+                    <DeleteButton onClick={() => handleDeleteClick(qr)} />
                   </div>
                 </div>
               </div>
             ))}
 
-            {showConfirm && selectedDestination && (
+            {showConfirm && selectedQR && (
               <DeleteConfirmPopup
-                message={`${selectedDestination.id}을(를) 정말 삭제하시겠습니까?`}
+                message={`${selectedQR.buildingName} QR 코드를 정말 삭제하시겠습니까?`}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
               />
@@ -177,4 +165,4 @@ function RoadviewManagementPage() {
   );
 }
 
-export default RoadviewManagementPage;
+export default QRcodeManagementPage;

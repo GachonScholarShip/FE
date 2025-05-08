@@ -67,7 +67,7 @@ function BuildingManagementAddPage() {
           </div>
 
           <div className={styles.bottomBox}>
-            <div className={styles.title}>건물 추가</div>
+            <div className={styles.title}>추가</div>
             <div className={styles.formContainer}>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>

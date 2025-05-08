@@ -53,23 +53,20 @@
   line-height: 100%;
   margin: 20px 0px 15px 20px;
 }
-
 .tableHeader {
   display: flex;
   font-weight: 700;
   font-size: 14px;
   margin: 0px 20px 10px 30px;
   border-top: 1px solid #ddd;
-
   border-bottom: 1px solid #ddd;
   padding-top: 10px;
-
   padding-bottom: 10px;
 }
 
 .tableRow {
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
   margin: 0px 30px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
@@ -78,6 +75,20 @@
 .column {
   max-width: 300px;
   flex: 1;
+}
+
+.column:nth-child(1) {
+  /* 강좌명 칸 */
+  flex: 0 0 100px; /* 강좌명 칸을 넓게 */
+}
+.column:nth-child(2) {
+  /* 강좌명 칸 */
+  flex: 2; /* 강좌명 칸을 넓게 */
+}
+
+.column:nth-child(4) {
+  /* 시간 칸 */
+  flex: 0 0 100px; /* 시간 칸을 좁게 */
 }
 
 .button {
@@ -170,4 +181,32 @@ select {
 .active {
   color: #014f99;
   font-weight: bold;
+}
+
+.pagination {
+  position: absolute;
+  left: 300px;
+  top: 530px;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pageButton {
+  padding: 8px 12px;
+  margin: 0 4px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.activePage {
+  padding: 8px 12px;
+  margin: 0 4px;
+  border: none;
+  color: #ffffff;
+  background-color: #005bac;
+  cursor: pointer;
+  border-radius: 4px;
 }

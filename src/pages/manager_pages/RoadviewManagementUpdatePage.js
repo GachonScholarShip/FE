@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SaveButton from "../../components/SaveButton";
 import styles from "./RoadviewManagementUpdatePage.module.css";
@@ -11,12 +10,26 @@ function RoadviewManagementUpdatePage() {
   const navigate = useNavigate();
   const { id, url, baseId } = location.state || {};
 
-  const [endPoint, setEndPoint] = useState(id || "");
+  const [endPoint, setEndPoint] = useState(id || ""); // 기본 값 설정
   const [naverUrl, setNaverUrl] = useState(url || "");
 
+  const destinations = [
+    "가천관",
+    "공과대학1",
+    "공과대학2",
+    "교육대학원",
+    "글로벌센터",
+    "바이오나노연구원",
+    "바이오나노대학",
+    "반도체대학",
+    "법과대학",
+    "비전타워",
+    "예술체육대학1",
+    "예술체육대학2",
+    "한의과대학",
+  ];
+
   if (!baseId) {
-    console.error("baseId가 null입니다. 제대로 전달되지 않았습니다.");
-    alert("로드뷰 수정 페이지로 이동할 수 없습니다. 다시 시도해주세요.");
     navigate("/rvm");
     return null;
   }
@@ -70,11 +83,18 @@ function RoadviewManagementUpdatePage() {
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label>목적지</label>
-                  <input
-                    type="text"
+                  <select
+                    className={styles.select}
                     value={endPoint}
                     onChange={(e) => setEndPoint(e.target.value)}
-                  />
+                  >
+                    <option value="">목적지를 선택해주세요</option>
+                    {destinations.map((destination, index) => (
+                      <option key={index} value={destination}>
+                        {destination}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className={styles.formGroup}>
                   <label>네이버 지도 URL (URL 단축 서비스 이용)</label>
@@ -82,6 +102,7 @@ function RoadviewManagementUpdatePage() {
                     type="text"
                     value={naverUrl}
                     onChange={(e) => setNaverUrl(e.target.value)}
+                    placeholder="URL을 입력해주세요"
                   />
                 </div>
               </div>

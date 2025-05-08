@@ -8,12 +8,14 @@ import bmIcon from "../assets/bm.svg";
 import muIcon from "../assets/mu.svg";
 import rmIcon from "../assets/rm.svg";
 import rvmIcon from "../assets/rvm.svg";
+import qrmIcon from "../assets/qrm.svg";
 import uaclickIcon from "../assets/uaclick.svg";
 import cmclickIcon from "../assets/cmclick.svg";
 import bmclickIcon from "../assets/bmclick.svg";
 import muclickIcon from "../assets/muclick.svg";
 import rmclickIcon from "../assets/rmclick.svg";
 import rvmclickIcon from "../assets/rvmclick.svg";
+import qrmclickIcon from "../assets/qrmclick.svg";
 
 const navItems = [
   { label: "사용자 계정", path: "/ua", icon: uaIcon, activeIcon: uaclickIcon },
@@ -26,6 +28,12 @@ const navItems = [
     path: "/rvm",
     icon: rvmIcon,
     activeIcon: rvmclickIcon,
+  },
+  {
+    label: "QR 코드 관리",
+    path: "/qrm",
+    icon: qrmIcon,
+    activeIcon: qrmclickIcon,
   },
 ];
 

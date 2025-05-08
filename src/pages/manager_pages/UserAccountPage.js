@@ -172,10 +172,6 @@ function UserAccountPage() {
 
             {errorMessage && <div className={styles.error}>{errorMessage}</div>}
 
-            <div className={styles.addButtonBox}>
-              <AddButton />
-            </div>
-
             <div className={styles.pagination}>
               {[...Array(totalPages)].map((_, idx) => (
                 <button

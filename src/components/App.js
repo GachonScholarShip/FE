@@ -12,7 +12,6 @@ import VisionCafePage from "../pages/VisionCafePage";
 import EduCafePage from "../pages/EduCafePage";
 import DormCafePage from "../pages/DormCafePage";
 import UserAccountPage from "../pages/manager_pages/UserAccountPage";
-import UserAccountAddPage from "../pages/manager_pages/UserAccountAddPage";
 import UserAccountUpdatePage from "../pages/manager_pages/UserAccountUpdatePage";
 import BuildingManagementPage from "../pages/manager_pages/BuildingManagementPage";
 import BuildingManagementAddPage from "../pages/manager_pages/BuildingManagementAddPage";
@@ -29,6 +28,9 @@ import RoadManagementUpdatePage from "../pages/manager_pages/RoadManagementUpdat
 import RoadviewManagementPage from "../pages/manager_pages/RoadviewManagementPage";
 import RoadviewManagementAddPage from "../pages/manager_pages/RoadviewManagementAddPage";
 import RoadviewManagementUpdatePage from "../pages/manager_pages/RoadviewManagementUpdatePage";
+import QRcodeManagementPage from "../pages/manager_pages/QRcodeManagementPage";
+import QRcodeManagementAddPage from "../pages/manager_pages/QRcodeManagementAddPage";
+import QRcodeManagementUpdatePage from "../pages/manager_pages/QRcodeManagementUpdatePage";
 
 import styles from "./App.module.css";
 import "./App.font.css";
@@ -52,7 +54,6 @@ function App() {
 
           {/* 관리자 페이지들 */}
           <Route path="/ua" element={<UserAccountPage />} />
-          <Route path="/uaa" element={<UserAccountAddPage />} />
           <Route path="/uau/:userId" element={<UserAccountUpdatePage />} />
 
           <Route path="/bm" element={<BuildingManagementPage />} />
@@ -85,6 +86,13 @@ function App() {
           <Route
             path="/rvmu/:roadviewId"
             element={<RoadviewManagementUpdatePage />}
+          />
+
+          <Route path="/qrm" element={<QRcodeManagementPage />} />
+          <Route path="/qrma" element={<QRcodeManagementAddPage />} />
+          <Route
+            path="/qrmu/:roadId"
+            element={<QRcodeManagementUpdatePage />}
           />
         </Routes>
       </div>

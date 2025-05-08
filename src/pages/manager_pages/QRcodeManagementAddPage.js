@@ -1,52 +1,87 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SaveButton from "../../components/SaveButton";
-import styles from "./RoadManagementAddPage.module.css";
+import styles from "./QRcodeManagementAddPage.module.css";
+import { useNavigate } from "react-router-dom";
 
-function RoadManagementAddPage() {
+function QRcodeManagementAddPage() {
   const [selectedName, setSelectedName] = useState("");
-  const [url, setUrl] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-
+  const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSave = async () => {
-    if (!selectedName || !url) {
-      setErrorMessage("모든 필드를 입력해주세요.");
+  const token =
+    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU";
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+  };
+
+  const getPresignedUrl = async (fileName) => {
+    const response = await axios.get(
+      "http://110.15.135.250:8000/movement-service/image/presigned-url",
+      {
+        params: { fileName },
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return response.data.data;
+  };
+
+  const uploadImageToS3 = async (file, presignedUrl) => {
+    await axios.put(presignedUrl, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+    return presignedUrl.split("?")[0];
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedName || !imageFile) {
+      alert("건물 이름과 이미지를 모두 선택해주세요.");
       return;
     }
 
+    setUploading(true);
+    setError("");
+
     try {
+      // (1) presigned URL을 이용해 S3에 이미지 업로드
+      const presignedUrl = await getPresignedUrl(imageFile.name);
+      const uploadedImageUrl = await uploadImageToS3(imageFile, presignedUrl);
+      console.log("Uploaded Image URL: ", uploadedImageUrl);
+
+      // (2) QR 코드 정보 POST 요청
       const response = await axios.post(
-        "http://110.15.135.250:8000/movement-service/admin/direction",
+        "http://110.15.135.250:8000/movement-service/admin/qrcode",
         {
-          endPoint: selectedName,
-          url: url,
+          buildingName: selectedName,
+          imageUrl: uploadedImageUrl,
         },
         {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU",
+            Authorization: token,
             "Content-Type": "application/json",
           },
         }
       );
 
       if (response.data.code === 200) {
-        setSuccessMessage("저장되었습니다.");
-        setErrorMessage("");
-        navigate("/rm");
+        alert("QR 코드가 성공적으로 추가되었습니다.");
+        navigate("/qrm");
+      } else {
+        alert(response.data.message);
       }
     } catch (error) {
-      if (error.response?.data?.code === 400) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
-      setSuccessMessage("");
+      alert(error.response?.data?.message || "등록 중 오류 발생");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -60,7 +95,7 @@ function RoadManagementAddPage() {
             <div className={styles.formContainer}>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label>목적지</label>
+                  <label>건물 이름</label>
                   <select
                     className={styles.select}
                     value={selectedName}
@@ -83,24 +118,13 @@ function RoadManagementAddPage() {
                   </select>
                 </div>
                 <div className={styles.formGroup}>
-                  <label>네이버 지도 URL (URL 단축 서비스 이용)</label>
-                  <input
-                    type="text"
-                    placeholder="URL을 입력해주세요"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                  />
+                  <label>QR 코드 이미지</label>
+                  <input type="file" onChange={handleFileChange} />
                 </div>
               </div>
-              {errorMessage && (
-                <div className={styles.error}>{errorMessage}</div>
-              )}
-              {successMessage && (
-                <div className={styles.success}>{successMessage}</div>
-              )}
             </div>
             <div className={styles.savebuttonContainer}>
-              <SaveButton onClick={handleSave} />
+              <SaveButton onClick={handleSubmit} />
             </div>
           </div>
         </div>
@@ -109,4 +133,4 @@ function RoadManagementAddPage() {
   );
 }
 
-export default RoadManagementAddPage;
+export default QRcodeManagementAddPage;

@@ -110,3 +110,11 @@
   cursor: pointer;
   border-radius: 4px;
 }
+
+.qrImage {
+  width: 100px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 5px;
+}

@@ -20,6 +20,8 @@ function AddButton() {
       navigate("/rma");
     } else if (currentPath === "/rvm") {
       navigate("/rvma");
+    } else if (currentPath === "/qrm") {
+      navigate("/qrma");
     }
   };
 
