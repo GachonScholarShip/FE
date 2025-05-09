@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ManagerNavBar from "../../components/ManagerNavBar";
 import SearchBar from "../../components/SearchBar";
@@ -23,23 +23,21 @@ function ClassroomManagementPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const itemsPerPage = 9;
-  const pageGroupSize = 10;
+  const itemsPerPage = 9; // 한 페이지에 보여줄 항목 수
+  const pageGroupSize = 10; // 페이지 그룹 크기 (페이지 버튼을 몇 개씩 묶을지 설정)
 
   const token =
     "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsInN1YiI6IkF1dGhvcml6YXRpb24iLCJpYXQiOjE3NDU0MTE3NzMsImV4cCI6MTc1NDA1MTc3M30.VBuP9Li37A7YGPTlv3Jc2dn8E1h6WK2CBOUTxi92cZU";
 
   const fetchClassroomDetails = async () => {
     try {
-      if (!selectedBuilding) {
-        return;
-      }
+      if (!selectedBuilding) return;
 
       const rawParams = {
         buildingName: selectedBuilding || undefined,
         floor: selectedFloor !== "" ? selectedFloor : undefined,
-        pageNum: currentPage,
-        pageSize: itemsPerPage,
+        pageSize: 5000,
+        pageNum: 0, // 항상 첫 페이지만 요청
       };
 
       const params = Object.fromEntries(
@@ -57,48 +55,17 @@ function ClassroomManagementPage() {
         }
       );
 
-      const data = response.data.data || [];
-      const totalElements = response.data.totalElements || data.length; // totalElements가 없으면 data.length 사용
-      const totalPages = Math.ceil(totalElements / itemsPerPage); // totalPages 계산
-      console.log(totalElements);
+      const content = response.data.data?.content || response.data.data || [];
+      const totalElements = response.data.data?.totalElements || content.length;
 
-      setRoomData(data);
-      setTotalPages(totalPages); // 페이지 수 업데이트
+      setRoomData(content);
+      setTotalPages(Math.ceil(totalElements / itemsPerPage)); // 전체 페이지 수 계산
     } catch (err) {
-      console.error("❌ 강의실 정보 불러오기 실패:", err);
+      console.error(err);
     }
   };
 
-  // 페이지네이션 관련 수정
-  const goToPrevGroup = () => {
-    if (pageGroupStart > 1) {
-      const newStart = Math.max(1, pageGroupStart - pageGroupSize);
-      setPageGroupStart(newStart);
-      setCurrentPage(newStart); // currentPage를 0부터 시작하도록 수정
-    }
-  };
-
-  const goToNextGroup = () => {
-    if (pageGroupStart + pageGroupSize <= totalPages) {
-      const newStart = pageGroupStart + pageGroupSize;
-      setPageGroupStart(newStart);
-      setCurrentPage(newStart); // currentPage를 0부터 시작하도록 수정
-    } else if (pageGroupStart < totalPages) {
-      const newStart = totalPages - (totalPages % pageGroupSize) + 1;
-      setPageGroupStart(newStart);
-      setCurrentPage(newStart); // currentPage를 0부터 시작하도록 수정
-    }
-  };
-
-  useEffect(() => {
-    fetchBuildings();
-    fetchClassroomDetails();
-  }, []);
-
-  useEffect(() => {
-    fetchClassroomDetails();
-  }, [selectedBuilding, selectedFloor, currentPage]);
-
+  // 건물 목록 불러오는 함수
   const fetchBuildings = async () => {
     try {
       const response = await axios.get(
@@ -133,15 +100,46 @@ function ClassroomManagementPage() {
       setBuildingFloorsMap(map);
       if (buildings.length > 0) {
         const firstBuilding = buildings[0].buildingName;
-        const firstFloor = buildings[0].floors[0]; // 첫 번째 빌딩의 첫 번째 층
+        const sortedFloors = map[firstBuilding]; // 이미 정렬된 상태
+        const lowestFloor = sortedFloors[0]; // 정렬된 리스트에서 최하층
         setSelectedBuilding(firstBuilding);
-        setSelectedFloor(firstFloor);
+        setSelectedFloor(lowestFloor);
       }
     } catch (err) {
       console.error("건물 목록 불러오기 실패:", err);
     }
   };
+  const pageNumbers = Array.from(
+    {
+      length:
+        totalPages >= pageGroupStart
+          ? Math.min(pageGroupSize, totalPages - pageGroupStart + 1)
+          : 0,
+    },
+    (_, i) => pageGroupStart + i
+  );
 
+  const goToPrevGroup = () => {
+    if (pageGroupStart > 1) {
+      const newStart = Math.max(1, pageGroupStart - pageGroupSize);
+      setPageGroupStart(newStart);
+      setCurrentPage(newStart);
+    }
+  };
+
+  const goToNextGroup = () => {
+    if (pageGroupStart + pageGroupSize <= totalPages) {
+      const newStart = pageGroupStart + pageGroupSize;
+      setPageGroupStart(newStart);
+      setCurrentPage(newStart);
+    } else if (pageGroupStart < totalPages) {
+      const newStart = totalPages - (totalPages % pageGroupSize) + 1;
+      setPageGroupStart(newStart);
+      setCurrentPage(newStart);
+    }
+  };
+
+  // 선택한 강의실 삭제 처리
   const handleDeleteClick = (roomId) => {
     setSelectedRoom(roomId);
     setShowConfirm(true);
@@ -187,12 +185,56 @@ function ClassroomManagementPage() {
     });
   };
 
-  const pageNumbers = Array.from(
-    {
-      length: Math.min(pageGroupSize, totalPages - pageGroupStart + 1),
-    },
-    (_, i) => pageGroupStart + i
+  const filteredData = useMemo(() => {
+    return roomData.filter(
+      (room) =>
+        (!searchTerm ||
+          room.roomName.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (selectedBuilding ? room.buildingName === selectedBuilding : true) &&
+        (selectedFloor ? room.floor === selectedFloor : true)
+    );
+  }, [roomData, searchTerm, selectedBuilding, selectedFloor]);
+
+  console.log("filteredData:", filteredData);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData]);
+
+  useEffect(() => {
+    console.log("filteredData:", filteredData);
+    if (filteredData.length === 0 && roomData.length > 0) {
+      console.warn("데이터 있음에도 필터링 결과 없음. 조건 확인 필요.");
+    }
+  }, [filteredData]);
+
+  const displayedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    fetchBuildings();
+  }, []);
+
+  useEffect(() => {
+    if (selectedBuilding) {
+      fetchClassroomDetails();
+    }
+  }, [selectedBuilding, selectedFloor]);
+
+  useEffect(() => {
+    console.log("currentPage:", currentPage);
+    console.log("selectedBuilding:", selectedBuilding);
+    console.log("selectedFloor:", selectedFloor);
+    fetchClassroomDetails();
+  }, [selectedBuilding, selectedFloor, currentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages]);
 
   const formatFloor = (floor) => {
     return typeof floor === "string" && floor.startsWith("B")
@@ -240,8 +282,11 @@ function ClassroomManagementPage() {
                 <select
                   value={selectedBuilding}
                   onChange={(e) => {
-                    setSelectedBuilding(e.target.value);
-                    setSelectedFloor("");
+                    const buildingName = e.target.value;
+                    const lowestFloor =
+                      buildingFloorsMap[buildingName]?.[0] || "";
+                    setSelectedBuilding(buildingName);
+                    setSelectedFloor(lowestFloor);
                     setCurrentPage(1);
                   }}
                 >
@@ -261,18 +306,11 @@ function ClassroomManagementPage() {
               <div className={styles.column}>시간</div>
               <div className={styles.column}></div>
             </div>
-            {roomData
-              .filter(
-                (room) =>
-                  (!searchTerm ||
-                    room.roomName
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase())) &&
-                  (!selectedBuilding ||
-                    room.buildingName === selectedBuilding) &&
-                  (!selectedFloor || room.floor === selectedFloor)
-              )
-              .map((room) => (
+
+            {filteredData.length === 0 ? (
+              <div className={styles.nodata}>검색 결과가 없습니다.</div>
+            ) : (
+              displayedData.map((room) => (
                 <div key={room.id} className={styles.tableRow}>
                   <div className={styles.column}>{room.roomName}</div>
                   <div className={styles.column}>{room.title}</div>
@@ -287,30 +325,34 @@ function ClassroomManagementPage() {
                     </div>
                   </div>
                 </div>
-              ))}
-
-            <div className={styles.pagination}>
-              <button onClick={goToPrevGroup} disabled={pageGroupStart === 1}>
-                ◀
-              </button>
-              {pageNumbers.map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={
-                    page === currentPage ? styles.activePage : styles.pageButton
-                  }
-                >
-                  {page}
+              ))
+            )}
+            {filteredData.length > 0 && (
+              <div className={styles.pagination}>
+                <button onClick={goToPrevGroup} disabled={pageGroupStart === 1}>
+                  ◀
                 </button>
-              ))}
-              <button
-                onClick={goToNextGroup}
-                disabled={pageGroupStart + pageGroupSize > totalPages}
-              >
-                ▶
-              </button>
-            </div>
+                {pageNumbers.map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={
+                      page === currentPage
+                        ? styles.activePage
+                        : styles.pageButton
+                    }
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={goToNextGroup}
+                  disabled={pageGroupStart + pageGroupSize > totalPages}
+                >
+                  ▶
+                </button>
+              </div>
+            )}
 
             {showConfirm && (
               <DeleteConfirmPopup
