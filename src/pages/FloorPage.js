@@ -1613,7 +1613,7 @@ function FloorPage() {
   
     // const currentPeriod = periods.find(p => hour >= p.start && hour < p.end);
     // if (currentPeriod) {
-    //   return ${day}${currentPeriod.period}; // 예: "수3"
+    //   return `${day}${currentPeriod.period}`; // 예: "수3"
     // }
     return "금5"; // 현재 시간이 교시 범위가 아닐 경우
   };
@@ -1656,7 +1656,6 @@ function FloorPage() {
           },
         }
       );
-  
       const classList = response.data?.data || [];
       console.log("클래스 리스트:", classList);
   
