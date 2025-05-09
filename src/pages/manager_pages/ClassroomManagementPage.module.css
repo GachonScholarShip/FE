@@ -184,9 +184,6 @@ select {
 }
 
 .pagination {
-  position: absolute;
-  left: 300px;
-  top: 530px;
   display: flex;
   justify-content: center;
   margin-top: 1rem;
@@ -209,4 +206,9 @@ select {
   background-color: #005bac;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.nodata {
+  display: flex;
+  justify-content: center;
 }
